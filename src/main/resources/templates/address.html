@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="utf-8" />
+    <title>地址管理</title>
+
+    <link rel="stylesheet" type="text/css" href="/css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/mygxin.css" />
+    <link rel="stylesheet" type="text/css" href="/css/sweetalert.css">
+<style>
+    select{
+        font-family: "微软雅黑";
+        width: 249px;
+        height: 40px;
+        font-size: 18px;
+        color: black;
+        text-align: center;
+        border: 1px #1a1a1a solid;
+        border-radius: 5px;
+    }
+
+    select:focus{
+        border: 2px #ddd solid;
+        box-shadow: 0 0 15px 1px black;
+    }
+
+</style>
+</head>
+<body>
+<!------------------------------head------------------------------>
+<div th:replace="header :: html"></div>
+<!------------------------------idea------------------------------>
+<div class="address mt">
+    <div class="wrapper clearfix">
+        <a href="/index" class="fl">首页</a>
+        <span>/</span>
+        <a href="/mygxin">个人中心</a>
+        <span>/</span>
+        <a href="/address" class="on">地址管理</a>
+    </div>
+</div>
+
+<!------------------------------Bott------------------------------>
+<div class="Bott">
+    <div class="wrapper clearfix">
+        <div th:replace="boot :: html"></div>
+        <div class="you fl">
+            <h2>收货地址</h2>
+            <div class="add">
+                <div>
+                    <a href="javascript:void(0)" id="addxad"><img src="/img/jia.png"/></a>
+                    <span>添加新地址</span>
+                </div>
+                <div class="dizhi" th:each="list:${addressList}" th:if="${list.defaultvalue==1}">
+                    <p th:text="${list.name}"></p>
+                    <p th:text="${list.telephone}"></p>
+                    <p th:text="${list.province}+' '+${list.city}+' '+${list.county}"></p>
+                    <p th:text="${list.particulars}"></p>
+                    <p class="addp"><a href="javascript:void(0)"  th:onclick="echoAddress([[${list.id}]])">修改</a><a href="javascript:void(0)" th:onclick="swal('默认地址不能删除')">删除</a></p>
+                </div>
+                <div class="dizhi" th:each="list:${addressList}" th:if="${list.defaultvalue==0}">
+                    <p th:text="${list.name}"></p>
+                    <p th:text="${list.telephone}"></p>
+                    <p th:text="${list.province}+' '+${list.city}+' '+${list.county} "></p>
+                    <p th:text="${list.particulars}"></p>
+                    <p class="addp"><a href="javascript:void(0)"  th:onclick="echoAddress([[${list.id}]])">修改</a><a href="javascript:void(0)" th:onclick="deleteAddress([[${list.id}]])">删除</a></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--添加-->
+<!--遮罩-->
+<div class="mask"></div>
+<div class="adddz">
+    <form action="/address/addAddress" method="post" id="AddressForm">
+        <input type="text" placeholder="收货人姓名" name="name" id="takename"/>
+        <input type="text" placeholder="收货人手机号" name="telephone" id="taketelephone"/>
+        <div id="distpicker5">
+            <select class="form-control" name="province" id="provinceadd"></select>
+            <select class="form-control" name="city" id="cityadd"></select>
+            <select class="form-control" name="county"  id="countyadd"></select>
+        </div>
+        <textarea name="particulars" rows="2" cols="" placeholder="收货人详细地址" id="particulars"></textarea>
+        <div class="bc">
+            <input type="submit" value="保存" />
+            <input type="button" value="取消" />
+        </div>
+    </form>
+</div>
+<!--编辑弹框-->
+<div class="readd">
+    <form action="/address/updateAddress" method="post" id="updateForm">
+        <input type="hidden" id="updateid" name="id">
+        <input type="text"  id="updatename" name="name" value="" />
+        <input type="text" id="updatephone" name="telephone" value="" />
+        <div id="distpicker3">
+            <div class="form-group">
+                <select class="form-control" name="province" id="updateprovince"></select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="city" id="updatecity"></select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="county" id="updatecounty"></select>
+            </div>
+        </div>
+        <textarea name="particulars" rows="" cols="" placeholder="详细地址" id="updateparticulars"></textarea>
+        <div class="bc">
+            <input type="submit" value="保存" />
+            <input type="button" value="取消" />
+        </div>
+    </form>
+</div>
+<!--返回顶部-->
+<div th:replace="gotop :: html"></div>
+<!--footer-->
+<div th:replace="footer :: html"></div>
+
+</div>
+<script src="/js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/sweetalert.min.js"></script>
+<script src="/js/user.js"></script>
+<script src="/js/address.js"></script>
+<script src="/js/distpicker.data.js"></script>
+<script src="/js/distpicker.js"></script>
+<script src="/js/main.js"></script>
+<script language="javascript">
+    //修改
+    function echoAddress(id){
+        $.ajax({
+            cache: false,
+            async: true,
+            type: 'post',
+            data: { "id": id },
+            url: "/address/echoAddress",
+            success: function (data) {
+                $("#updateid").val(data.id);
+                $("#updatename").val(data.name);
+                $("#updatephone").val(data.telephone);
+                $("#updateparticulars").val(data.particulars);
+            }
+        });
+
+        $(".mask").show();
+        $(".readd").show();
+    }
+    $(function(){
+        //添加
+        $("#AddressForm").submit(function () {
+            if (checkName($("#takename"))&&checkTelephone($("#taketelephone"))
+                &&checkProvince($("#provinceadd"))&&checkCity($("#cityadd"))&&checkCounty($("#countyadd"))&&checkParticulars($("#particulars"))) {
+                return true;
+            }
+            return false;
+        })
+        //修改
+        $("#updateForm").submit(function () {
+            if (checkName($("#updatename"))&&checkTelephone($("#updatephone"))
+                &&checkProvince($("#updateprovince"))&&checkCity($("#updatecity"))&&checkCounty($("#updatecounty"))&&checkParticulars($("#updateparticulars"))) {
+                return true;
+            }
+            return false;
+        })
+    });
+
+    //删除
+    function deleteAddress(id) {
+        swal({
+            title: "您确定要删除吗？",
+            text: "您确定要删除这条数据？",
+            type: "warning",
+            showCancelButton: true,
+            closeOnConfirm: false,
+            confirmButtonText: "是的，我要删除",
+            confirmButtonColor: "#ec6c62"
+        }, function() {
+            location.href="/address/deleteAddressByid?id="+id;
+        });
+    }
+
+</script>
+</body>
+</html>
+

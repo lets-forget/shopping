@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ning.home_admin.mapper.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.ning.home_admin.bean.Order">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_uid" jdbcType="INTEGER" property="orderUid" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="order_details_id" jdbcType="VARCHAR" property="orderDetailsId" />
+    <result column="order_address_id" jdbcType="INTEGER" property="orderAddressId" />
+    <result column="order_classify" jdbcType="VARCHAR" property="orderClassify" />
+    <result column="order_title" jdbcType="VARCHAR" property="orderTitle" />
+    <result column="order_count" jdbcType="INTEGER" property="orderCount" />
+    <result column="order_image" jdbcType="VARCHAR" property="orderImage" />
+    <result column="order_price" jdbcType="DOUBLE" property="orderPrice" />
+    <result column="order_subtotal" jdbcType="DOUBLE" property="orderSubTotal" />
+    <result column="order_time" jdbcType="DATE" property="orderTime" />
+    <result column="order_shouh" jdbcType="INTEGER" property="orderShouh" />
+    <result column="order_ispay" jdbcType="INTEGER" property="orderIspay" />
+    <result column="order_type" jdbcType="INTEGER" property="orderType" />
+    <result column="details_id" jdbcType="INTEGER" property="detailsId" />
+    <result column="order_ispj" jdbcType="INTEGER" property="orderPj" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jd_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ning.home_admin.bean.Order">
+    insert into jd_order (order_uid, order_id,order_details_id,order_address_id,
+      order_classify, order_title, order_count, 
+      order_image, order_price,order_subtotal, order_time,
+      order_shouh, order_ispay, order_type,details_id,order_ispj
+      )
+    values (#{orderUid,jdbcType=INTEGER}, #{orderId,jdbcType=VARCHAR},#{orderDetailsId},#{orderAddressId},
+      #{orderClassify,jdbcType=VARCHAR}, #{orderTitle,jdbcType=VARCHAR}, #{orderCount,jdbcType=INTEGER},
+      #{orderImage,jdbcType=VARCHAR}, #{orderPrice,jdbcType=DOUBLE}, #{orderSubTotal},#{orderTime,jdbcType=DATE},
+      #{orderShouh,jdbcType=INTEGER}, #{orderIspay,jdbcType=INTEGER}, #{orderType,jdbcType=INTEGER},#{detailsId,jdbcType=INTEGER}
+      , #{orderPj,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ning.home_admin.bean.Order">
+    update jd_order
+    set order_uid = #{orderUid,jdbcType=INTEGER},
+      order_id = #{orderId,jdbcType=VARCHAR},
+      order_details_id = #{orderDetailsId,jdbcType=VARCHAR},
+      order_address_id = #{orderAddressId},
+      order_classify = #{orderClassify,jdbcType=VARCHAR},
+      order_title = #{orderTitle,jdbcType=VARCHAR},
+      order_count = #{orderCount,jdbcType=INTEGER},
+      order_image = #{orderImage,jdbcType=VARCHAR},
+      order_price = #{orderPrice,jdbcType=DOUBLE},
+      order_subtotal = #{orderSubTotal,jdbcType=DOUBLE},
+      order_time = #{orderTime,jdbcType=DATE},
+      order_shouh = #{orderShouh,jdbcType=INTEGER},
+      order_ispay = #{orderIspay,jdbcType=INTEGER},
+      order_type = #{orderType,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!--支付成功修改-->
+  <update id="updateByIsPay" parameterType="java.lang.String">
+    update jd_order
+    set order_ispay = 1
+    where order_id = #{orderId} and order_details_id=#{orderDetailsId}
+  </update>
+  <!--确认收货-->
+  <update id="updateByOrderIsShouh" parameterType="java.lang.String">
+    update jd_order
+    set order_shouh = 1
+    where order_id = #{orderId}
+  </update>
+<!--多个id支付成功-->
+  <update id="updateByOrderIds" parameterType="java.util.List">
+    update jd_order
+    set order_ispay = 1
+    <where>
+      <foreach collection="list" item="orderList" open=" order_id in (" close=")"
+               separator=",">
+        #{orderList.orderId}
+      </foreach>
+    </where>
+  </update>
+  <!--收货-->
+  <update id="updateByOrderIdAndOrderDetailsId" parameterType="java.lang.String">
+    update jd_order
+    set order_shouh = 1 where order_id=${orderId} and order_details_id=#{orderDetailsId}
+  </update>
+  <!--修改评价-->
+  <update id="updatePJByDetailIdAndUid" parameterType="java.lang.Integer">
+    update jd_order
+    set order_ispj = 1 where details_id=${param1} and order_uid=#{param2}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, order_uid, order_id,order_details_id,order_address_id, order_classify, order_title, order_count, order_image,
+    order_price,order_subtotal, order_time, order_shouh, order_ispay, order_type
+    from jd_order
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!--根据订单号查询-->
+  <select id="selectByPrimaryById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, order_uid, order_id,order_details_id,order_address_id, order_classify, order_title, order_count, order_image,
+    order_price,order_subtotal, order_time, order_shouh, order_ispay, order_type
+    from jd_order
+    where order_id = #{orderId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, order_uid, order_id,order_details_id,order_address_id, order_classify, order_title, order_count, order_image,
+    order_price,order_subtotal, order_time, order_shouh, order_ispay, order_type
+    from jd_order
+  </select>
+
+  <select id="selectByOrderId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select id, order_uid, order_id, order_details_id,order_address_id,order_classify, order_title, order_count, order_image,
+    order_price,order_subtotal, order_time, order_shouh, order_ispay, order_type
+    from jd_order where order_id=#{order_id}
+  </select>
+  <!--订单详情-->
+  <select id="selectByOrderIdAndOrderDetailsId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select id, order_uid, order_id, order_details_id,order_address_id,order_classify, order_title, order_count, order_image,
+    order_price,order_subtotal, order_time, order_shouh, order_ispay, order_type
+    from jd_order where order_id=#{orderId} and order_details_id=#{orderDetailsId}
+  </select>
+  <!--根据uid查询全部订单-->
+  <select id="selectAllByUid" resultMap="BaseResultMap">
+    select id, order_uid, order_id,order_details_id,order_address_id, order_classify, order_title, order_count, order_image,
+    order_price,order_subtotal, order_time, order_shouh, order_ispay, order_type,order_ispj
+    from jd_order
+    <where>
+      order_uid=#{uid}
+      <if test="orderType ==2 ">/*待支付*/
+        and order_ispay=0
+      </if>
+
+       <if test="orderType ==3 ">/*待收货*/
+        and order_shouh=0 and order_ispay=1
+      </if>
+
+      <if test="orderType ==4 ">/*待评价*/
+           and order_shouh=1 and order_ispay=1 and  order_ispj=0
+      </if>
+      <if test="name !=null and name!='' ">
+        and order_title like concat('%',#{name},'%')
+      </if>
+      order by order_time desc
+    </where>
+
+  </select>
+
+  <select id="selectAjaxlength" resultMap="BaseResultMap">
+      select id, order_uid, order_id,order_details_id,order_address_id, order_classify, order_title, order_count, order_image,
+      order_price,order_subtotal, order_time, order_shouh, order_ispay, order_type,order_ispj
+      from jd_order
+      <where>
+        order_uid=#{id}
+        <if test="orderType ==2 ">/*待支付*/
+          and order_ispay=0
+        </if>
+
+        <if test="orderType ==3 ">/*待收货*/
+          and order_shouh=0 and order_ispay=1
+        </if>
+
+        <if test="orderType ==4 ">/*待评价*/
+          and order_shouh=1 and order_ispay=1  and order_ispj=0
+        </if>
+      </where>
+  </select>
+  <select id="selectByUidAndDetailsId" resultMap="BaseResultMap" >
+    select id, order_uid, order_id,order_details_id,order_address_id, order_classify, order_title, order_count, order_image,
+      order_price,order_subtotal, order_time, order_shouh, order_ispay, order_type, details_id
+      from jd_order where order_uid=#{param1} and details_id=#{param2}
+  </select>
+  <select id="daieValuateByUid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select id, order_uid, order_id,order_details_id,order_address_id, order_classify, order_title, order_count, order_image,
+      order_price,order_subtotal, order_time, order_shouh, order_ispay, order_type, details_id,order_ispj
+      from jd_order where order_shouh=1 and order_ispay=1 and order_ispj=0 and order_uid=#{uid}
+  </select>
+
+  <select id="findByispjAndUid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select id, order_uid, order_id,order_details_id,order_address_id, order_classify, order_title, order_count, order_image,
+      order_price,order_subtotal, order_time, order_shouh, order_ispay, order_type, details_id,order_ispj
+      from jd_order where order_ispj=1  and order_uid=#{uid}
+  </select>
+</mapper>

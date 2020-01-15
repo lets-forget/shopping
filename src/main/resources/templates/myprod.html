@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="utf-8" />
+    <title>我的评价</title>
+    <link rel="stylesheet" type="text/css" href="css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="css/myorder.css" />
+    <link rel="stylesheet" type="text/css" href="/layui/css/layui.css"/>
+
+</head>
+<body>
+<!------------------------------head------------------------------>
+<div th:replace="header :: html"></div>
+<!------------------------------idea------------------------------>
+<div class="address mt">
+    <div class="wrapper clearfix">
+        <a href="/index" class="fl">首页</a>
+        <span>/</span>
+        <a href="/mygxin" class="on">个人中心</a>
+    </div>
+</div>
+
+
+<!------------------------------Bott------------------------------>
+<div class="Bott">
+    <div class="wrapper clearfix">
+        <div th:replace="boot :: html"></div>
+        <div class="you fl">
+            <div class="my clearfix">
+                <h2 class="fl">商品评价</h2>
+            </div>
+            <div class="dlist">
+                <ul class="clearfix" id="pro">
+                    <li class="on"><a href="javascript:void(0)">待评价商品</a></li>
+                    <li><a href="javascript:void(0)">已评价商品</a></li>
+                </ul>
+            </div>
+            <div class="sx clearfix">
+                <div class="clearfix">
+                    <dl class="fl" th:each="c : ${wpj}">
+                        <dt><a ><img th:src="${c.orderImage}" style="width: 162px;height: 200px;"/></a></dt>
+                        <dd><a href="javascript:void(0)" th:text="${c.orderTitle}"></a></dd>
+                        <dd th:text="${c.orderPrice}"></dd>
+                        <dd><a href="javascript:void(0)" th:onclick="fzdetails([[${c.detailsId}]])">评价</a></dd>
+                    </dl>
+                </div>
+                <div class="clearfix">
+                    <dl class="fl" th:each="y : ${ypj}">
+                        <dt><a href="javascript:void(0)"><img th:src="${y.orderImage}" style="width: 162px;height: 200px;"/></a></dt>
+                        <dd><a href="javascript:void(0)" th:text="${y.orderTitle}"></a></dd>
+                        <dd th:text="${y.orderPrice}"></dd>
+                        <dd><a href="javascript:void(0)">查看评价</a></dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mask"></div>
+<!--评价弹框-->
+<div class="pj" style="width: 810px;left: 35%;">
+    <div class="clearfix"><a href="javascript:void(0)" class="fr gb"><img src="img/icon4.png"/></a></div>
+    <form class="layui-form" id="commentForm" lay-filter="deptForm" enctype="mutipart/form-data">
+        <textarea class="layui-textarea" id="connect" name="connect"  placeholder="请输入内容" lay-verify="required"></textarea>
+        <div class="layui-upload" style="margin-top:20px;">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="test2">选择图片</button>
+                    <button type="submit" class="layui-btn layui-btn-warm" lay-submit lay-filter="test" style="margin-left:68%;">发布评论</button>
+                </div>
+            </div>
+            <button type="button" class="layui-btn" id="submitImage" style="display: none;">上传图片</button>
+            <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                预览图：
+                <div class="layui-upload-list" id="demo2"></div>
+            </blockquote>
+        </div>
+    </form>
+</div>
+<!--查看评价-->
+<div class="chak" style="width: 700px;left: 40%;">
+    <div class="clearfix"><a href="javascript:void(0)" class="fr gb"><img src="img/icon4.png"/></a></div>
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+            <legend>评论图片</legend>
+        </fieldset>
+
+    <div class="layui-row">
+        <div class="layui-col-md1">
+            <img src="/userImage/newUser.jpg" style="width: 50px;height: 50px;">
+        </div>
+        <div class="layui-col-md1">
+            <img src="/userImage/newUser.jpg" style="width: 50px;height: 50px;">
+        </div>
+        <div class="layui-col-md1">
+            <img src="/userImage/newUser.jpg" style="width: 50px;height: 50px;">
+        </div>
+        <div class="layui-col-md1">
+            <img src="/userImage/newUser.jpg" style="width: 50px;height: 50px;">
+        </div>
+        <div class="layui-col-md1">
+            <img src="/userImage/newUser.jpg" style="width: 50px;height: 50px;">
+        </div>
+        <div class="layui-col-md1">
+            <img src="/userImage/newUser.jpg" style="width: 50px;height: 50px;">
+        </div>
+        <div class="layui-col-md1">
+            <img src="/userImage/newUser.jpg" style="width: 50px;height: 50px;">
+        </div>
+        <div class="layui-col-md1">
+            <img src="/userImage/newUser.jpg" style="width: 50px;height: 50px;">
+        </div>
+        <div class="layui-col-md1">
+            <img src="/userImage/newUser.jpg" style="width: 50px;height: 50px;">
+        </div>
+        <div class="layui-col-md1">
+            <img src="/userImage/newUser.jpg" style="width: 50px;height: 50px;">
+        </div>
+        <div class="layui-col-md1">
+            <img src="/userImage/newUser.jpg" style="width: 50px;height: 50px;">
+        </div>
+        <div class="layui-col-md1">
+            <img src="/userImage/newUser.jpg" style="width: 50px;height: 50px;">
+        </div>
+    </div>
+    <textarea  style="margin-top: 30px;" class="layui-textarea" id="plconnect" name="connect"  placeholder="请输入内容" lay-verify="required"></textarea>
+</div>
+
+<!--返回顶部-->
+<div th:replace="gotop :: html"></div>
+<!--footer-->
+<div th:replace="footer :: html"></div>
+<script src="/js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/user.js" type="text/javascript" charset="utf-8"></script>
+</body>
+<script>
+    var datailsid;
+    function fzdetails(id){
+        datailsid=id;
+    }
+    layui.use(['upload','form'], function() {
+        let form=layui.form;
+        let upload=layui.upload
+        ,$ = layui.jquery;
+        form.verify({
+            image: function(value, item) { //value：表单的值、item：表单的DOM对象
+                if(value.length <=0){
+                    return '必须上传图片';
+                }
+            },
+        });
+        //监听提交
+        form.on('submit(test)', function(data){
+                $.ajax({
+                    type : "post",
+                    url : "/comment/connect",
+                    data : {"commentConnect":data.field.connect,"detailsId":datailsid}, // 你的formid
+                    dataType: "json",
+                    success : function(ret) {
+                        if (ret.code===200) {
+                            $("#submitImage").click();
+                            layer.msg('图片上传中，请稍后', {
+                                icon: 16
+                                ,time:0
+                                ,shade:  [0.8, '#393D49']
+                            });
+                        } else {
+                            layer.alert(ret.message, {
+                                icon: 2,
+                                title:"提示"
+                            });
+                        }
+                    }
+                    ,error : function(request) {
+                        layer.confirm('您还没有登录，请先登录', {
+                            btn: ['去登录','稍后登录'] //按钮
+                        }, function(){
+                            location.href="/login";
+                        }, function(){
+                            layer.closeAll("confirm");
+                        });
+                    }
+                });
+                return false;
+            });
+        //多图片上传
+        upload.render({
+            elem: '#test2'
+            ,url: '/comment/uploadImage'
+            ,auto: false
+            ,accept: 'images' //图片
+            ,bindAction: '#submitImage'
+            ,size: 2*1024 //限制文件大小，单位 KB
+            ,multiple: true
+            ,number:8
+            ,choose	: function(obj){
+                this.data = { 'details_id': datailsid };
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#demo2').append('<img src="'+ result +'" alt="'+ file.name +'" id="remove_' + index + '" title="双击图片删除" class="layui-upload-img" style="width: 92px;height: 92px;margin: 0 10px 10px 0;">');
+                    //双击删除指定预上传图片
+                    $('#remove_' + index).bind('dblclick', function () {
+                        //双击事件的执行代码
+                        delete file[index];//删除指定图片
+                        $(this).remove();
+                    })
+                });
+            }
+            ,done: function(res, index, upload){
+                if (res.code!=200){
+                    layer.msg(res.message,{offset: '100px',icon:2});
+                }
+            }
+            ,allDone: function(obj){ //当文件全部被提交后，才触发
+                layer.alert('评论成功', {
+                    icon: 1,
+                    title:"提示"
+                });
+                layer.closeAll('loading'); //关闭loading
+                setTimeout(function () {
+                    window.location.reload();
+                },400);
+            }
+            ,error: function(index, upload){
+                layer.closeAll('loading'); //关闭loading
+            }
+        });
+    });
+</script>
+</html>
+
+

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>商品详情</title>
+    <link rel="stylesheet" type="text/css" href="/css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/proList.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/sweetalert.css"/>
+    <link rel="stylesheet" type="text/css" href="/layui/css/layui.css"/>
+</head>
+<body>
+<!------------------------------head------------------------------>
+<div th:replace="header :: html"></div>
+<!-----------------address------------------------------->
+<div class="address">
+    <div class="wrapper clearfix">
+        <a href="/index=">首页</a>
+        <span>/</span>
+
+        <a href="javascript:void(0)" class="on" th:text="${showAllDetails.details.itemDetailsTitle}"></a>
+    </div>
+</div>
+<!-----------------------Detail------------------------------>
+<div class="detCon">
+    <div class="proDet wrapper">
+        <div class="proCon clearfix">
+            <div class="proImg fl">
+                <img class="det" th:src="${showAllDetails.smallList[0].itemSmallImage}"/>
+                <div class="smallImg clearfix">
+                    <img th:each="big : ${showAllDetails.bigList}" th:src="${big.itemBigImage}" th:class="${big.itemBigImage}">
+                </div>
+            </div>
+            <div class="fr intro">
+                <div class="title">
+                    <p style="font-size: 18px;font-family: Arial;" th:text="${showAllDetails.details.itemDetailsTitle}"></p>
+                    <p th:text="${showAllDetails.details.itemDetailsNews}"></p>
+                    <span th:text="'￥'+${showAllDetails.details.itemDetailsPrice}"></span>
+                </div>
+                <div class="proIntro">
+                    <p>颜色分类</p>
+                    <div class="smallImg clearfix categ">
+                        <p th:each="small : ${showAllDetails.smallList}" class="fl" th:onclick="getSmallid([[${small.itemSmallId}]])"><img th:src="${small.itemSmallImage}" th:alt="${small.itemSmallAlt}" th:class="${small.itemSmallImage}"></p>
+                    </div>
+                    <p>数量&nbsp;&nbsp;库存<span th:text="${showAllDetails.details.itemDetailsCount}"></span>件</p>
+                    <div class="num clearfix">
+                        <img class="fl sub" src="/img/temp/sub.jpg">
+                        <span class="fl" contentEditable="true">1</span>
+                        <img class="fl add" src="/img/temp/add.jpg">
+                        <p class="please fl">请选择商品属性!</p>
+                    </div>
+                </div>
+                <div class="btns clearfix" style="margin-top:20px;">
+                    <a href="javascript:void(0)"><p class="buy fl">立即购买</p></a>
+                    <a href="javascript:void(0)"><p class="cart fr">加入购物车</p></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="introMsg wrapper clearfix">
+    <div class="msgL fl">
+        <div class="msgTit clearfix">
+            <a class="on">商品详情</a>
+            <a>所有评价</a>
+        </div>
+        <div class="msgAll">
+            <div class="msgImgs">
+                <img th:each="big,bigSta : ${showAllDetails.bigList}" th:if="${bigSta.index}<=1" th:src="${big.itemBigImage}" width="940" height="700">
+            </div>
+            <div class="eva">
+                <div id="commentInfo">
+
+                </div>
+               <fieldset class="layui-elem-field layui-field-title">
+                      <div id="demo7"></div>
+               </fieldset>
+               <form class="layui-form" id="commentForm" lay-filter="deptForm" enctype="mutipart/form-data">
+                   <textarea class="layui-textarea" id="connect" name="connect"  placeholder="请输入内容" lay-verify="required"></textarea>
+                   <div class="layui-upload">
+                           <button type="button" class="layui-btn" id="test2" style="margin-top:20px;">选择图片</button>
+                           <button type="button" class="layui-btn" id="display" style="margin-top:20px;display: none;">上传图片</button>
+                           <button type="submit" class="layui-btn layui-btn-warm" id="uploadbutton" style="margin-left:80%;margin-top:20px;" lay-submit lay-filter="comment">发布评论</button>
+                           <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                           预览图：
+                           <div class="layui-upload-list" id="demo2"></div>
+                       </blockquote>
+                       </div>
+                 </form>
+            </div>
+        </div>
+    </div>
+    <div class="msgR fr">
+        <h4>为你推荐</h4>
+        <div class="seeList">
+            <a  th:each="item,itemSta : ${itemList}" th:if="${itemSta.index}<=5" th:href="@{'/details/'+${item.id}}">
+                <dl>
+                    <dt><img th:src="${item.itemImage}" style="width: 161px;height: 200px;"></dt>
+<!--
+                    <dd style="width: 161px;height: 30px;" th:text="${item.itemTitle}"></dd>
+-->
+                    <dd th:text="'￥'+${item.itemPrice}"></dd>
+                </dl>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="like">
+    <h4>猜你喜欢</h4>
+    <div class="bottom">
+        <div class="hd">
+            <span class="prev"><img src="/img/temp/prev.png"></span>
+            <span class="next"><img src="/img/temp/next.png"></span>
+        </div>
+        <div class="imgCon bd">
+            <div class="likeList clearfix">
+                <div>
+                    <a  th:each="item,itemSta : ${items}" th:if="${itemSta.index}<=5" th:href="@{'/details/'+${item.id}}">
+                        <dl>
+                            <dt><img th:src="${item.itemImage}"></dt>
+                            <dd th:text="${item.itemTitle}"></dd>
+                            <dd th:text="'￥'+${item.itemPrice}"></dd>
+                        </dl>
+                    </a>
+                </div>
+                <div>
+                    <a th:each="item,itemSta : ${itemList}" th:if="${itemSta.index}<=5" th:href="@{'/details/'+${item.id}}">
+                        <dl>
+                            <dt><img th:src="${item.itemImage}"></dt>
+                            <dd th:text="${item.itemTitle}"></dd>
+                            <dd th:text="'￥'+${item.itemPrice}"></dd>
+                        </dl>
+                    </a>
+                    <a  th:href="@{'/details/'+${items[0].id}}" class="last">
+                        <dl>
+                            <dt><img th:src="${items[0].itemImage}"></dt>
+                            <dd th:text="${items[0].itemTitle}"></dd>
+                            <dd th:text="'￥'+${items[0].itemPrice}"></dd>
+                        </dl>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--返回顶部-->
+<div th:replace="gotop :: html"></div>
+<div class="msk"></div>
+<!--footer-->
+<div th:replace="footer :: html"></div>
+<script src="/js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/jquery.SuperSlide.2.1.1.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/nav.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/pro.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/cart.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/sweetalert.min.js" type="text/javascript" charset="utf-8"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let currentPage=1;
+    let limit=10;
+    let total;
+
+    $(window).on('load', () => {
+        $(".layui-upload-file").attr("lay-verify","image")
+        // 初始化加载数据
+        getInfoToPage();
+    });
+    $('body').on('click','.fadaimage',function(){
+        var img=$(this)[0].src;
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: 0,
+            area: '700px',
+            skin: 'layui-layer-nobg', //没有背景色
+            shadeClose: true,
+            content: '<img src='+img+' width="100%">'
+        });
+    });
+    function getInfoToPage() {
+        getInfo();  // 获取数据
+        toPage();   // 进行分页
+    }
+
+    function getInfo(){
+        $.ajax({
+            url:'/comment/selectAll',
+            type:'post',
+            data:{'currentPage':currentPage,'limit':limit,"details_id":[[${showAllDetails.details.itemDetailsId}]]},
+            async: false,// 设置同步请求，加载数据前锁定浏览器
+            dataType: 'json',
+            success: (data)=> {
+                // 2.重新赋值页码、条数、总记录数
+                currentPage = data.currentPage;
+                limit = data.limit;
+                total = data.total;
+
+                let text='';
+                $.each(data.lists, (i, item) => {
+                    let value=item.commentImage;
+                    let str=value.substring(0, value.length-1).split(",");
+
+                   text+='<div class="per clearfix">\n';
+                   text+='        <img  class="fl" src="'+item.user.avatar+'" style="width: 41px;height: 40px;border-radius: 44px;display: block;"><!--头像-->\n';
+                   text+='        <div class="perR fl">\n';
+                   text+='            <p>'+item.user.username+'</p><!--用户名-->\n';
+                   text+='            <p>'+item.commentConnect+'</p><!--评论-->\n';
+                   text+='            <div class="clearfix" id="commentImage"><!--图片-->\n';
+                    $.each(str,(j,image) =>{
+                        text+='<p><img src="'+image+'" style="width: 40px;height: 40px;" class="fadaimage"></p>';
+                    });
+                   text+='            </div>\n';
+                   text+='            <p><span>'+item.commentTimeStr+'</span><span id="CommentType">商品类型：<span >';
+                            $.each(item.orders,(k,order) =>{
+                                text+= '<span>'+order.orderClassify+'</span>';
+                            });
+                   text+='</p>\n';
+                   text+='        </div>\n';
+                   text+='    </div>';
+                });
+                $("#commentInfo").html(text)
+            }
+        });
+    }
+    function toPage(){
+        layui.use(["laypage"],function () {
+            let laypage=layui.laypage;
+            laypage.render({
+                elem: 'demo7'
+                ,count: total
+                ,theme: '#FFB800'
+                ,first: '首页'
+                ,last: '尾页'
+                ,prev: '<em><<</em>'
+                ,next: '<em>>></em>'
+                ,layout: ['count', 'prev','page', 'next', 'groups','skip']
+                ,jump: function(data, first){
+                    currentPage=data.curr;
+                    limit=data.limit;
+                    getInfo();
+                }
+            });
+        });
+    }
+
+    /*]]>*/
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    jQuery(".bottom").slide({titCell:".hd ul",mainCell:".bd .likeList",autoPage:true,autoPlay:false,effect:"leftLoop",autoPlay:true,vis:1});
+    layui.use(['upload','form','laypage'], function(){
+       var form = layui.form
+            ,$ = layui.jquery;
+       var upload=layui.upload;
+        var laypage=layui.laypage;
+
+        form.verify({
+            image: function(value, item) { //value：表单的值、item：表单的DOM对象
+                if(value.length <=0){//断点发现这个规则已经进来
+                    return '必须上传图片';
+                }
+            },
+         });
+        //监听提交
+        form.on('submit(comment)', function(data){
+            $.ajax({
+                cache : true,
+                type : "post",
+                url : "/comment/ispurchase",
+                data : {"detailsId":[[${showAllDetails.details.itemDetailsId}]]},
+                dataType: "json",
+                success : function(ret) {
+                    if (ret.code===200) {
+                        $.ajax({
+                            cache : true,
+                            async:false,
+                            type : "post",
+                            url : "/comment/connect",
+                            data : {"commentConnect":data.field.connect,"detailsId":[[${showAllDetails.details.itemDetailsId}]]}, // 你的formid
+                            dataType: "json",
+                            success : function(ret) {
+                                if (ret.code===200) {
+                                    $("#display").click();
+                                    layer.msg('图片上传中，请稍后', {
+                                        icon: 16
+                                        ,shade:  [0.8, '#393D49']
+                                    });
+                                } else {
+                                    layer.alert(ret.message, {
+                                        icon: 2,
+                                        title:"提示"
+                                    });
+                                }
+                            }
+                            ,error : function(request) {
+                                layer.confirm('您还没有登录，请先登录', {
+                                    btn: ['去登录','稍后登录'] //按钮
+                                }, function(){
+                                    location.href="/login";
+                                }, function(){
+                                    layer.closeAll("confirm");
+                                });
+                            }
+                        });
+                    } else {
+                        layer.confirm('抱歉您当前没有购买该商品，无法评论，请先购买', {
+                            btn: ['好的','稍后购买'] //按钮
+                        }, function(){
+                            layer.closeAll();
+                        }, function(){
+                            layer.closeAll("confirm");
+                        });
+                    }
+                }
+                ,error : function(request) {
+                    layer.confirm('您还没有登录，请先登录', {
+                        btn: ['去登录','稍后登录'] //按钮
+                    }, function(){
+                        location.href="/login";
+                    }, function(){
+                        layer.closeAll("confirm");
+                    });
+                }
+            });
+            return false;
+        });
+        //多图片上传
+        upload.render({
+            elem: '#test2'
+            ,url: '/comment/uploadImage'
+            ,auto: false
+            ,accept: 'images' //图片
+            ,bindAction: '#display'
+            ,size: 2*1024 //限制文件大小，单位 KB
+            ,multiple: true
+            ,number:8
+            ,choose	: function(obj){
+                this.data = { 'details_id': [[${showAllDetails.details.itemDetailsId}]] };
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    $('#demo2').append('<img src="'+ result +'" alt="'+ file.name +'" id="remove_' + index + '" title="双击图片删除" class="layui-upload-img" style="width: 92px;height: 92px;margin: 0 10px 10px 0;">');
+                    //双击删除指定预上传图片
+                    $('#remove_' + index).bind('dblclick', function () {
+                        //双击事件的执行代码
+                        delete file[index];//删除指定图片
+                        $(this).remove();
+                    })
+                });
+            }
+            ,done: function(res, index, upload){
+                if (res.code!=200){
+                    layer.msg(res.message,{offset: '100px',icon:2});
+                }
+            }
+            ,allDone: function(obj){ //当文件全部被提交后，才触发
+                getInfo();  // 获取数据
+                toPage();   // 进行分页
+                layer.alert('评论成功', {
+                    icon: 1,
+                    title:"提示"
+                });
+                layer.closeAll('loading'); //关闭loading
+            }
+            ,error: function(index, upload){
+                layer.closeAll('loading'); //关闭loading
+            }
+        });
+    });
+
+    /*]]>*/
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var small_id;
+    function getSmallid(id){
+        small_id=id;
+    }
+
+    //加入购物车
+    $(".btns .cart").click(function(){
+        if($(".categ p").hasClass("on")){
+            let price=[[${showAllDetails.details.itemDetailsPrice}]];
+            let title=[[${showAllDetails.details.itemDetailsTitle}]];
+            let count=$(".num span.fl").html();
+           let image=$(".on img").attr("src");
+           let Classify=$(".on img").attr("alt");
+           let subtotal=count*price;
+            $.ajax({
+                type: 'POST',
+                url: "/cart/add",
+                data: {"small_id":small_id,"cartTitle":title,"cartClassify":Classify,"cartImage":image,"cartPrice":price,"cartCount":count,"cartSubtotal":subtotal},
+                dataType: "json",
+                success: function(response){
+                    if(response){
+                        cartSelect();
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                error:function(response){
+                    alert(response.message);
+                }
+            });
+
+        }
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

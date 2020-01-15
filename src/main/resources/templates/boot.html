@@ -1,0 +1,50 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+    #session_name{
+        font-size: 19px;
+        /*渐变背景*/
+        background-image: -webkit-linear-gradient(left, #3498db, #f47920 10%, #d71345 20%, #f7acbc 30%,
+        #ffd400 40%, #3498db 50%, #f47920 60%, #d71345 70%, #f7acbc 80%, #ffd400 90%, #3498db);
+        color: transparent; /*文字填充色为透明*/
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;          /*背景剪裁为文字，只将文字显示为背景*/
+        background-size: 200% 100%;            /*背景图片向水平方向扩大一倍，这样background-position才有移动与变化的空间*/
+        /* 动画 */
+        animation: masked-animation 3s infinite linear;
+    }
+    @keyframes masked-animation {
+        0% {
+            background-position: 0 0;   /*background-position 属性设置背景图像的起始位置。*/
+        }
+        100% {
+            background-position: -100% 0;
+        }
+    }
+</style>
+<div class="zuo fl" id="boot">
+    <link type="text/css" rel="stylesheet" href="/css/mygxin.css">
+    <link rel="stylesheet" type="text/css" href="/layui/css/layui.css"/>
+    <h3>
+        <a href="javascript:void(0)"><img  th:src="${session.user.avatar}" class="mygxinimage"/></a>
+        <p class="clearfix"><span class="fl" id="session_name" th:text="${session.user.username}"></span><a href="/logout" class="fr">退出登录</a></p>
+    </h3>
+    <div>
+        <ul>
+            <li><a href="/cart">我的购物车</a></li>
+            <li><a href="/order/selectAll">我的订单</a></li>
+            <li><a href="/myprod">评价晒单</a></li>
+        </ul>
+        <ul>
+            <li><a href="/mygxin">我的中心</a></li>
+            <li><a href="/address/selectAll">地址管理</a></li>
+        </ul>
+        <ul>
+            <li><a href="/mygrxx">个人信息</a></li>
+            <li><a href="/remima">修改密码</a></li>
+        </ul>
+    </div>
+</div>
+<script src="/js/magnfiy.js" charset="utf-8"></script>
+</html>
+
+

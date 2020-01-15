@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ning.home_admin.sytem.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.ning.home_admin.sytem.pojo.User">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="activate" jdbcType="INTEGER" property="activate" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="last_time" jdbcType="TIMESTAMP" property="lastTime" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="describes" jdbcType="VARCHAR" property="describes" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jd_user
+    where user_id = #{user_id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ning.home_admin.sytem.pojo.User">
+    insert into jd_user (username, password, email, sex,
+      phone,status ,activate, create_time,update_time,last_time, avatar,describes,code
+      )
+    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+       #{email,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{phone} , #{status,jdbcType=INTEGER}, #{activate,jdbcType=INTEGER}
+       , #{createTime,jdbcType=DATE}, #{updateTime,jdbcType=DATE}, #{lastTime,jdbcType=DATE}
+       ,#{avatar,jdbcType=VARCHAR},#{describes,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ning.home_admin.sytem.pojo.User">
+    update jd_user
+    set phone = #{phone,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=DATE},
+      describes = #{describes,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+    <!--激活-->
+  <update id="updatecheckCode" parameterType="java.lang.String">
+    update jd_user
+    set activate = 1
+    where code = #{code}
+  </update>
+  <!--修改头像-->
+  <update id="updateImage">
+    update jd_user
+    set avatar = #{avatar}
+    where user_id = #{userId}
+  </update>
+  <!--修改密码1-->
+  <update id="updatePassword">
+    update jd_user
+    set password = #{password}
+    where user_id = #{userId}
+  </update>
+  <!--修改密码2-->
+  <update id="updateByUsernameAndPassword">
+    update jd_user
+    set password = #{password}
+    where username = #{username}
+  </update>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+   select user_id, username, password, email, sex, phone, status,activate, create_time, update_time,
+    last_time, avatar, describes,code
+    from jd_user
+    where user_id = #{userId}
+  </select>
+  <!--查询用户名-->
+  <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+     select user_id, username, password, email, sex, phone, status,activate, create_time, update_time,
+    last_time, avatar, describes,code
+    from jd_user
+    where username = #{username}
+  </select>
+  <!--查询邮箱-->
+  <select id="selectIsByEmail" parameterType="java.lang.String" resultMap="BaseResultMap">
+     select user_id, username, password, email, sex, phone, status,activate, create_time, update_time,
+    last_time, avatar, describes,code
+    from jd_user
+    where email = #{email}
+  </select>
+  <select id="selectIsByEmailList" parameterType="java.lang.String" resultMap="BaseResultMap">
+     select user_id, username, password, email, sex, phone, status,activate, create_time, update_time,
+    last_time, avatar, describes,code
+    from jd_user
+    where email = #{email}
+  </select>
+
+  <select id="selectAll" resultMap="BaseResultMap">
+   select user_id, username, password, email, sex, phone, status, activate,create_time, update_time,
+    last_time, avatar, describes,code
+    from jd_user
+  </select>
+
+</mapper>

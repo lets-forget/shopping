@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="utf-8" />
+    <title>我的订单</title>
+    <link rel="stylesheet" type="text/css" href="/css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/myorder.css" />
+    <link rel="stylesheet" type="text/css" href="/css/page.css"/>
+</head>
+<body>
+<!------------------------------head------------------------------>
+<div th:replace="header :: html"></div>
+<!------------------------------idea------------------------------>
+<div class="address mt">
+    <div class="wrapper clearfix">
+        <a href="/index" class="fl">首页</a>
+        <span>/</span>
+        <a href="/mygxin">个人中心</a>
+        <span>/</span>
+        <a href="/order/selectAll" class="on">我的订单</a>
+    </div>
+</div>
+
+<!------------------------------Bott------------------------------>
+<div class="Bott">
+    <div class="wrapper clearfix">
+        <div th:replace="boot :: html"></div>
+        <div class="you fl">
+            <div class="my clearfix">
+                <h2 class="fl">我的订单</h2>
+            </div>
+            <div class="dlist clearfix">
+                <ul class="fl clearfix" id="wa">
+                    <li th:class="${pageInfo.orderType==1?'on':''}"><a th:href="@{'/order/selectAll?currentPage='+${pageInfo.pageInfo.pageNum}+'&orderType=1&name='}">全部有效订单</a></li>
+                    <li th:class="${pageInfo.orderType==2?'on':''}"><a th:href="@{'/order/selectAll?currentPage='+${pageInfo.pageInfo.pageNum}+'&orderType=2&name='}">待支付</a></li>
+                    <li th:class="${pageInfo.orderType==3?'on':''}"><a th:href="@{'/order/selectAll?currentPage='+${pageInfo.pageInfo.pageNum}+'&orderType=3&name='}">待收货</a></li>
+                    <li th:class="${pageInfo.orderType==4?'on':''}"><a th:href="@{'/order/selectAll?currentPage='+${pageInfo.pageInfo.pageNum}+'&orderType=4&name='}">待评价</a></li>
+                </ul>
+                <form action="/order/selectAll" method="post" class="fr clearfix">
+                    <input type="text" name="name" th:value="${param.name}" placeholder="请输入关键字" />
+                    <input type="submit" value="" />
+                </form>
+            </div>
+
+            <div th:if="${pageInfo.list.size()<=0}">
+                <script>
+                    $(function () {
+                        $("#aaaa").hide();
+                    })
+                </script>
+                <style>
+                    .goOn{
+                        height:400px;
+                        line-height:400px;
+                        font-size: 16px;
+                        color:#666;
+                        text-align: center;
+                    }
+                    .goOn a{
+                        color: #C10000;
+                        text-decoration: underline;
+                    }
+                </style>
+                <div class="goOn">空空如也~<a href="/index">去逛逛吧</a></div>
+            </div>
+
+                <!--待评价-->
+                <div th:each="order: ${pageInfo.list}">
+                        <div class="dkuang" th:if="${order.orderShouh==1&&order.orderIspay==1}">
+                            <p class="one" th:text="${order.orderShouhStr}"></p>
+                            <div class="word clearfix">
+                                <ul class="fl clearfix">
+                                    <li th:text="${order.orderTime}"></li>
+                                    <li th:text="'订单号:'+${order.orderId}"></li>
+                                    <li th:text="${order.orderTypeStr}"></li>
+                                </ul>
+                                <p class="fr">订单金额：<span th:text="${order.orderSubTotal}"></span>元</p>
+                            </div>
+                            <div class="shohou clearfix">
+                                <a href="javascript:void(0)" class="fl"><img th:src="${order.orderImage}"/></a>
+                                <p class="fl"><a href="javascript:void(0)" style="font-size: 14px;" th:text="${order.orderTitle}"></a><a href="javascript:void(0)" th:text="'¥'+${order.orderPrice}+'×'+${order.orderCount}"></a></p>
+                                <p class="fr">
+                                    <a href="/myprod">待评价</a>
+                                    <a th:href="@{'/order/details/'+${order.orderId}+'/'+${order.orderDetailsId}}">订单详情</a>
+                                </p>
+                            </div>
+                        </div>
+                <!--待收货-->
+                    <div class="dkuang clearfix deng" th:if="${order.orderShouh==0&&order.orderIspay==1}">
+                        <p class="one fl" th:text="${order.orderShouhStr}"></p>
+                        <div  class="clearfix">
+
+                        </div>
+                        <div class="word clearfix">
+                            <ul class="fl clearfix">
+                                <li th:text="${order.orderTime}"></li>
+                                <li th:text="'订单号:'+${order.orderId}"></li>
+                                <li th:text="${order.orderTypeStr}"></li>
+                            </ul>
+                            <p class="fr">订单金额：<span th:text="${order.orderSubTotal}"></span>元</p>
+                        </div>
+                        <div class="shohou clearfix">
+                            <a href="javascript:void(0)" class="fl"><img th:src="${order.orderImage}"/></a>
+                            <p class="fl"><a href="javascript:void(0)" style="font-size: 14px;" th:text="${order.orderTitle}"></a><a href="javascript:void(0)" th:text="'¥'+${order.orderPrice}+'×'+${order.orderCount}"></a></p>
+                            <p class="fr">
+                                <a th:href="@{'/order/affirm/'+${order.orderId}+'/'+${order.orderDetailsId}}">确认收货</a>
+                                <a th:href="@{'/order/details/'+${order.orderId}+'/'+${order.orderDetailsId}}">订单详情</a>
+                            </p>
+                        </div>
+                    </div>
+                <!--待支付-->
+                    <div class="dkuang deng" th:if="${order.orderIspay==0}">
+                        <p class="one" th:text="${order.orderIspayStr}"></p>
+                        <div class="word clearfix">
+                            <ul class="fl clearfix">
+                                <li th:text="${order.orderTime}"></li>
+                                <li th:text="'订单号:'+${order.orderId}"></li>
+                                <li th:text="${order.orderTypeStr}"></li>
+                            </ul>
+                            <p class="fr">订单金额：<span th:text="${order.orderSubTotal}"></span>元</p>
+                        </div>
+                        <div class="shohou clearfix">
+                            <a href="javascript:void(0)" class="fl"><img th:src="${order.orderImage}"/></a>
+                            <p class="fl"><a href="javascript:void(0)" style="font-size: 14px;" th:text="${order.orderTitle}"></a><a href="javascript:void(0)" th:text="'¥'+${order.orderPrice}+'×'+${order.orderCount}"></a></p>
+                            <p class="fr">
+                                <a th:href="@{'/payment/'+${order.orderId}+'/'+${order.orderDetailsId}+'/'+info}">立即支付</a>
+                                <a th:href="@{'/order/details/'+${order.orderId}+'/'+${order.orderDetailsId}}">订单详情</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            <nav role="navigation" id="page">
+
+            </nav>
+        </div>
+    </div>
+</div>
+<!--返回顶部-->
+<div th:replace="gotop :: html"></div>
+<!--footer-->
+<div th:replace="footer :: html"></div>
+<script src="/js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/user.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/location.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let pages = [[${pageInfo.pageInfo.pages}]];
+    let pageNum = [[${pageInfo.pageInfo.pageNum}]];
+    let name = [[${param.name}]];
+    var pageList = "<ul class='cd-pagination no-space'>";
+
+    pageList += "<span>总共有" + pages + "页</span>";
+    pageList += "<span>当前是" + pageNum + "页</span>";
+
+    //判断上一页是否为第一页
+    if ([[${pageInfo.pageInfo.isFirstPage}]]) {
+        pageList += "<li class='button'><a class='disabled' href='javascript:void(0)'>上一页</a></li>";
+    } else {
+        if (name===null){
+            pageList += "<li class='button'><a href='/order/selectAll?orderType="+[[${param.orderType}]]+"&currentPage=" + [[${pageInfo.pageInfo.pageNum-1}]] + "'>上一页</a></li>";
+        } else{
+            pageList += "<li class='button'><a href='/order/selectAll?orderType="+[[${param.orderType}]]+"&currentPage=" + [[${pageInfo.pageInfo.pageNum-1}]] + "&name="+[[${param.name}]]+"'>上一页</a></li>";
+        }
+    }
+
+    //前5后4
+    let start;
+    let end;
+    //当总页码小于10
+    if(pages<=10){
+        start=1;
+        end=pages;
+    }else{
+        start=pageNum-5;
+        end=pageNum+4;
+        if(start<=0){
+            start=1;
+            end=start+9;
+        }
+        if(end>pages){
+            end=pages;
+            start=end-9;
+        }
+    }
+    //遍历分页
+    for (let i = start; i <= end; i++) {
+        //判断是否是当前页
+        if ([[${pageInfo.pageInfo.pageNum}]] == i) {
+            pageList += "<li class='active'><a href='javascript:void(0)'>" + i + "</a></li>";
+        } else {
+            if ([[${param.name}]]===null) {
+                pageList += "<li><a href='/order/selectAll?orderType="+[[${param.orderType}]]+"&currentPage=" + i + "'>" + i + "</a></li>";
+            }else{
+                pageList += "<li><a href='/order/selectAll?orderType="+[[${param.orderType}]]+"&currentPage=" + i + "&name="+[[${param.name}]]+"'>" + i + "</a></li>";
+            }
+        }
+    }
+    //判断是否是最后一页
+    if ([[${pageInfo.pageInfo.hasNextPage}]]) {
+        if (name===null){
+            pageList += "<li class='button'><a href='/order/selectAll?orderType="+[[${param.orderType}]]+"&currentPage=" + [[${pageInfo.pageInfo.pageNum+1}]] + "'>下一页</a></li>";
+        } else{
+            pageList += "<li class='button'><a href='/order/selectAll?orderType="+[[${param.orderType}]]+"&currentPage=" + [[${pageInfo.pageInfo.pageNum+1}]] + "&name="+[[${param.name}]]+"'>下一页</a></li>";
+        }
+    } else {
+        pageList += "<li class='button'><a class='disabled' href='javascript:void(0)'>下一页</a></li>"
+    }
+
+    pageList += "</ul>";
+
+    $("#page").html(pageList);
+
+    /*]]>*/
+</script>
+
+</body>
+</html>

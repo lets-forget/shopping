@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ning.home_admin.mapper.ItemSmallMapper">
+  <resultMap id="BaseResultMap" type="com.ning.home_admin.bean.ItemSmall">
+    <id column="item_small_id" jdbcType="INTEGER" property="itemSmallId" />
+    <result column="item_details_id" jdbcType="INTEGER" property="itemDetailsId" />
+    <result column="item_small_alt" jdbcType="VARCHAR" property="itemSmallAlt" />
+    <result column="item_small_image" jdbcType="VARCHAR" property="itemSmallImage" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jd_item_small
+    where item_small_id = #{itemSmallId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ning.home_admin.bean.ItemSmall">
+    insert into jd_item_small (item_small_id, item_details_id, item_small_alt, 
+      item_small_image)
+    values (#{itemSmallId,jdbcType=INTEGER}, #{itemDetailsId,jdbcType=INTEGER}, #{itemSmallAlt,jdbcType=VARCHAR}, 
+      #{itemSmallImage,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ning.home_admin.bean.ItemSmall">
+    update jd_item_small
+    set item_details_id = #{itemDetailsId,jdbcType=INTEGER},
+      item_small_alt = #{itemSmallAlt,jdbcType=VARCHAR},
+      item_small_image = #{itemSmallImage,jdbcType=VARCHAR}
+    where item_small_id = #{itemSmallId,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select item_small_id, item_details_id, item_small_alt, item_small_image
+    from jd_item_small where item_small_id=#{itemSmallId}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select item_small_id, item_details_id, item_small_alt, item_small_image
+    from jd_item_small
+  </select>
+  <!--根据item_details_id查询所有的图片-->
+  <select id="selectAllByDetails_id" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select item_small_id, item_details_id, item_small_alt, item_small_image
+    from jd_item_small where item_details_id=#{item_details_id};
+  </select>
+</mapper>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="utf-8" />
+    <title>个人信息</title>
+    <link rel="stylesheet" type="text/css" href="/css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/mygxin.css" />
+    <link rel="stylesheet" type="text/css" href="/layui/css/layui.css"/>
+
+</head>
+<body>
+<!------------------------------head------------------------------>
+<div th:replace="header :: html"></div>
+<!------------------------------idea------------------------------>
+<div class="address mt" id="add">
+    <div class="wrapper clearfix">
+        <a href="index" class="fl">首页</a>
+        <span>/</span>
+        <a href="mygxin" class="on">个人中心</a>
+    </div>
+</div>
+
+<!------------------------------Bott------------------------------>
+<div class="Bott">
+    <div class="wrapper clearfix">
+        <div th:replace="boot :: html"></div>
+        <div class="you fl">
+            <div class="tx clearfix">
+                <div class="fl clearfix">
+                    <a href="javascript:void(0)" class="fl"><img th:src="${session.user.avatar}" class="imagefada" style="display: block;width: 90px;height: 90px;border-radius: 44px;"/></a>
+                    <p class="fl"><span id="Name"></span><a href="mygrxx">修改个人信息></a></p>
+                </div>
+                <div class="fr" id="mygxinEmail"></div>
+            </div>
+            <div class="bott">
+                <div class="clearfix">
+                    <a href="javascript:void(0)" class="fl"><img src="/img/gxin1.jpg"/></a>
+                    <p class="fl"><span>待支付的订单：<strong id="dzifu"></strong></span>
+                        <a href="/order/selectAll?currentPage=1&orderType=2">查看待支付订单></a>
+                    </p>
+                </div>
+                <div class="clearfix">
+                    <a href="javascript:void(0)" class="fl"><img src="/img/gxin2.jpg"/></a>
+                    <p class="fl"><span>待收货的订单：<strong id="dshuo"></strong></span>
+                        <a href="/order/selectAll?currentPage=1&orderType=3">查看待收货订单></a>
+                    </p>
+                </div>
+                <div class="clearfix">
+                    <a href="javascript:void(0)" class="fl"><img src="/img/gxin3.jpg"/></a>
+                    <p class="fl"><span>待评价的订单：<strong id="dpjia"></strong></span>
+                        <a href="/order/selectAll?currentPage=1&orderType=4">查看待评价订单></a>
+                    </p>
+                </div>
+                <div class="clearfix">
+                    <a href="javascript:void(0)" class="fl"><img src="/img/gxin4.jpg"/></a>
+                    <p class="fl"><span>喜欢的商品：<strong>0</strong></span>
+                        <a href="javascript:void(0)">查看喜欢的商品></a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--返回顶部-->
+<div th:replace="gotop :: html"></div>
+<div th:replace="footer :: html"></div>
+<script src="/js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/user.js" type="text/javascript" charset="utf-8"></script>
+</body>
+<script>
+    $('.imagefada').click(function(){
+        var img=$(this)[0].src;
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: 0,
+            area: '700px',
+            skin: 'layui-layer-nobg', //没有背景色
+            shadeClose: true,
+            content: '<img src='+img+' width="100%">'
+        });
+    });
+    $.get("/order/ajaxSelectAll",{"orderType":"2"},function (data) {
+        $("#dzifu").text(data.length);
+    });
+    $.get("/order/ajaxSelectAll",{"orderType":"3"},function (data) {
+        $("#dshuo").text(data.length);
+    });
+    $.get("/order/ajaxSelectAll",{"orderType":"4"},function (data) {
+        $("#dpjia").text(data.length);
+    });
+</script>
+</html>
+
+

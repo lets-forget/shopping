@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="utf-8" />
+    <title>家用电器</title>
+    <link rel="stylesheet" type="text/css" href="/css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/proList.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/page.css"/>
+    <link rel="stylesheet" type="text/css" href="/layui/css/layui.css"/>
+
+</head>
+<body>
+<!------------------------------head------------------------------>
+<div th:replace="header :: html"></div>
+
+<!------------------------------banner------------------------------>
+
+<!-----------------address------------------------------->
+<div class="address">
+    <div class="wrapper clearfix">
+        <a href="/index">首页</a>
+        <span>/</span>
+        <a href="/flowerDer" class="on">家用电器</a>
+    </div>
+</div>
+<!-------------------current---------------------->
+<div class="current">
+    <div class="wrapper clearfix">
+        <div class="fr choice">
+            <p class="default">排序方式</p>
+            <ul class="select">
+                <li onclick="location.href='/flowerDer/selectAll?cid=4&sort=1'">新品上市</li>
+                <li onclick="location.href='/flowerDer/selectAll?cid=4&sort=2'">销量从高到低</li>
+                <li onclick="location.href='/flowerDer/selectAll?cid=4&sort=3'">销量从低到高</li>
+                <li onclick="location.href='/flowerDer/selectAll?cid=4&sort=4'">价格从高到低</li>
+                <li onclick="location.href='/flowerDer/selectAll?cid=4&sort=5'">价格从低到高</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!----------------proList------------------------->
+<ul class="proList wrapper clearfix">
+    <li th:each="flowerDer : ${pageInfo.list}">
+        <a th:href="@{'/details/'+${flowerDer.id}}">
+            <dl>
+                <dt><img th:src="${flowerDer.itemImage}"></dt>
+                <dd th:text="${flowerDer.itemTitle}"></dd>
+                <dd th:text="'￥'+${flowerDer.itemPrice}"></dd>
+            </dl>
+        </a>
+        <p class="quick" style="border: 1px solid #000;display: none;" th:onclick="echobzproList([[${flowerDer.id}]])">快速浏览</p>
+    </li>
+</ul>
+<!----------------mask------------------->
+<div class="mask"></div>
+<!-------------------mask内容------------------->
+<div id="echoDetails">
+
+</div>
+<!--返回顶部-->
+<div th:replace="gotop :: html"></div>
+<div class="msk"></div>
+<nav role="navigation" id="page">
+</nav>
+
+<!--footer-->
+<div th:replace="footer :: html"></div>
+<script src="/js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/nav.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/pro.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/cart.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/location.js"></script>
+
+<script>
+    var title;
+    var price;
+    function echobzproList(item_id){
+        var echoDetails='';
+        $.get("/Ajaxdetails",{"item_id":item_id},function (data) {
+            title=data.details.itemDetailsTitle;
+            price=data.details.itemDetailsPrice;
+            var smallImage='';
+            for (var i = 0; i <data.smallList.length; i++) {
+                smallImage+='<p class="fl" onclick="getSmallid('+data.smallList[i].itemSmallId+')"><img src='+data.smallList[i].itemSmallImage+' alt='+data.smallList[i].itemSmallAlt+' class='+data.smallList[i].itemSmallImage+'></p>\n';
+            }
+            var bigImage='';
+            for (var i = 0; i <data.bigList.length ; i++) {
+                bigImage+='<img  src="'+data.bigList[i].itemBigImage+'" class="'+data.bigList[i].itemBigImage+'">';
+            }
+
+            echoDetails+='<div class="proDets">\n' +
+                '        <img class="off" src="/img/temp/off.jpg" />\n' +
+                '        <div class="tit clearfix">\n' +
+                '            <h4 class="fl">'+data.details.itemDetailsTitle+'</h4>\n' +
+                '            <span class="fr">￥'+data.details.itemDetailsPrice+'</span>\n' +
+                '        </div>\n' +
+                '        <div class="proCon clearfix">\n' +
+                '            <div class="proImg fl">\n' +
+                '                <img class="list" src="'+data.smallList[0].itemSmallImage+'" style="width: 360px;height: 360px;" />\n' +
+                '                <div class="smallImg clearfix" id="bigImage" style="width: 400px;">\n' +
+                '                </div>\n' +
+                '            </div>\n' +
+                '            <div class="fr">\n' +
+                '                <div class="proIntro">\n' +
+                '                    <p>颜色分类</p>\n' +
+                '                    <div class="smallImg clearfix categ" style="width: 400px;">\n' +
+                '                    </div>\n' +
+                '                    <p>数量&nbsp;&nbsp;库存<span>'+data.details.itemDetailsCount+'</span>件</p>\n' +
+                '                    <div class="num clearfix">\n' +
+                '                        <img class="fl sub" src="/img/temp/sub.jpg">\n' +
+                '                        <span class="fl" contentEditable="true">1</span>\n' +
+                '                        <img class="fl add" src="/img/temp/add.jpg">\n' +
+                '                        <p class="please fl">请选择商品属性!</p>\n' +
+                '                    </div>\n' +
+                '                </div>\n' +
+                '                <div class="btns clearfix" style="margin-top: 20px;">\n' +
+                '                    <a href="javascript:void(0)"><p class="buy fl">立即购买</p></a>\n' +
+                '                    <a href="javascript:void(0)"><p class="cart fr">加入购物车</p></a>\n' +
+                '                </div>\n' +
+                '            </div>\n' +
+                '        </div>\n' +
+                '        <a class="more" href="/details/'+data.details.itemDetailsItemid+'">查看更多细节</a>\n' +
+                '    </div>';
+            $("#echoDetails").html(echoDetails);
+            $(".categ").html(smallImage);
+            $("#bigImage").html(bigImage);
+            $(".proDets").show();
+            $(".mask").show();
+        })
+    }
+
+    var small_id;
+    function getSmallid(id){
+        small_id=id;
+    }
+
+    //加入购物车
+    $("#echoDetails").on("click",".btns .cart",function(){
+        if($(".categ p").hasClass("on")){
+            var count=$(".num span.fl").html();
+            var image=$(".on img").attr("src");
+            var Classify=$(".on img").attr("alt");
+            var subtotal=count*price;
+            $.ajax({
+                type: 'POST',
+                url: "/cart/add",
+                data: {"small_id":small_id,"cartTitle":title,"cartClassify":Classify,"cartImage":image,"cartPrice":price,"cartCount":count,"cartSubtotal":subtotal},
+                // dataType: "json",
+                success: function(response){
+                    if(response){
+                        cartSelect();
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                error:function(response){
+                    alert(response.message);
+                }
+            });
+        }
+    });
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let pages = [[${pageInfo.pageInfo.pages}]];
+    let pageNum = [[${pageInfo.pageInfo.pageNum}]];
+    var pageList = "<ul class='cd-pagination no-space'>";
+
+    pageList += "<span>总共有" + pages + "页</span>";
+    pageList += "<span>当前是" + pageNum + "页</span>";
+
+    //判断上一页是否为第一页
+    if ([[${pageInfo.pageInfo.isFirstPage}]]) {
+        pageList += "<li class='button'><a class='disabled' href='javascript:void(0)'>上一页</a></li>";
+    } else {
+        pageList += "<li class='button'><a href='/flowerDer/selectAll?cid=4&currentPage=" + [[${pageInfo.pageInfo.pageNum-1}]] + "'>上一页</a></li>";
+    }
+
+    //前5后4
+    let start;
+    let end;
+    //当总页码小于10
+    if(pages<=10){
+        start=1;
+        end=pages;
+    }else{
+        start=pageNum-5;
+        end=pageNum+4;
+        if(start<=0){
+            start=1;
+            end=start+9;
+        }
+        if(end>pages){
+            end=pages;
+            start=end-9;
+        }
+    }
+    //遍历分页
+    for (let i = start; i <= end; i++) {
+        //判断是否是当前页
+        if ([[${pageInfo.pageInfo.pageNum}]] == i) {
+            pageList += "<li class='active'><a href='javascript:void(0)'>" + i + "</a></li>";
+        } else {
+            pageList += "<li><a href='/flowerDer/selectAll?cid=4&currentPage=" + i + "'>" + i + "</a></li>";
+        }
+    }
+    //判断是否是最后一页
+    if ([[${pageInfo.pageInfo.hasNextPage}]]) {
+        pageList += "<li class='button'><a href='/flowerDer/selectAll?cid=4&currentPage=" + [[${pageInfo.pageInfo.pageNum+1}]] + "'>下一页</a></li>";
+    } else {
+        pageList += "<li class='button'><a class='disabled' href='javascript:void(0)'>下一页</a></li>"
+    }
+
+    pageList += "</ul>";
+
+    $("#page").html(pageList);
+
+    /*]]>*/
+</script>
+
+</body>
+</html>

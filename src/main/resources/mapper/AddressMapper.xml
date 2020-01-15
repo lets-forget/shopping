@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ning.home_admin.mapper.AddressMapper">
+  <resultMap id="BaseResultMap" type="com.ning.home_admin.bean.Address">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="county" jdbcType="VARCHAR" property="county" />
+    <result column="particulars" jdbcType="VARCHAR" property="particulars" />
+    <result column="defaultvalue" jdbcType="INTEGER" property="defaultvalue" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jd_address
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!--添加地址-->
+  <insert id="insert" parameterType="com.ning.home_admin.bean.Address">
+    insert into jd_address (id, uid, name, 
+      telephone, province, city, 
+      county, particulars, defaultvalue
+      )
+    values (#{id,jdbcType=INTEGER}, #{uid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+      #{telephone,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{county,jdbcType=VARCHAR}, #{particulars,jdbcType=VARCHAR}, #{defaultvalue,jdbcType=INTEGER}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ning.home_admin.bean.Address">
+    update jd_address
+    set name = #{name,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      county = #{county,jdbcType=VARCHAR},
+      particulars = #{particulars,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, uid, name, telephone, province, city, county, particulars, defaultvalue
+    from jd_address
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, uid, name, telephone, province, city, county, particulars, defaultvalue
+    from jd_address
+  </select>
+  <!--根据用户查询地址-->
+  <select id="selectAllByUid" resultMap="BaseResultMap">
+    select id, uid, name, telephone, province, city, county, particulars, defaultvalue
+    from jd_address where uid=#{id}
+  </select>
+  <!--根据uid修改1的为0-->
+  <update id="updateDefaultValue" parameterType="java.lang.Integer">
+    update jd_address set defaultvalue=0 where uid=#{uid}
+  </update>
+  <update id="updateDefultById" parameterType="java.lang.Integer">
+    update jd_address set defaultvalue=1 where id=#{id}
+  </update>
+</mapper>

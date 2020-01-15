@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="utf-8"/>
+    <title>墙式壁挂</title>
+    <link rel="stylesheet" type="text/css" href="/css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/proList.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/page.css"/>
+</head>
+<body>
+<!------------------------------head------------------------------>
+<div th:replace="header :: html"></div>
+<!-----------------banner------------------------------->
+<div class="banner">
+    <a href="javascript:void(0)"><img src="/img/temp/banner2.jpg"/></a>
+</div>
+<!-----------------address------------------------------->
+<div class="address">
+    <div class="wrapper clearfix">
+        <a href="/index">首页</a>
+        <span>/</span>
+        <a href="/paint" class="on">墙式壁挂</a>
+    </div>
+</div>
+<!-----------------paintCon------------------------------->
+<div class="paintCon">
+    <section class="wrapper">
+        <div class="paintList">
+            <a th:each="paint : ${pageInfo.list}" th:href="@{'/details/'+${paint.id}}">
+                <dl>
+                    <dt><img th:src="${paint.itemImage}"></dt>
+                    <dd th:text="${paint.itemTitle}"></dd>
+                    <dd th:text="${paint.itemPrice}"></dd>
+                </dl>
+            </a>
+        </div>
+    </section>
+
+</div>
+<!--返回顶部-->
+<div th:replace="gotop :: html"></div>
+<div class="msk"></div>
+<nav role="navigation" id="page">
+
+</nav>
+<!--footer-->
+<div th:replace="footer :: html"></div>
+<script src="/js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/location.js"></script>
+<script src="/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/nav.js" type="text/javascript" charset="utf-8"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+        let pages = [[${pageInfo.pageInfo.pages}]];
+        let pageNum = [[${pageInfo.pageInfo.pageNum}]];
+        var pageList = "<ul class='cd-pagination no-space'>";
+
+        pageList += "<span>总共有" + pages + "页</span>";
+        pageList += "<span>当前是" + pageNum + "页</span>";
+
+        //判断上一页是否为第一页
+        if ([[${pageInfo.pageInfo.isFirstPage}]]) {
+            pageList += "<li class='button'><a class='disabled' href='javascript:void(0)'>上一页</a></li>";
+        } else {
+            pageList += "<li class='button'><a href='/paint/selectAll?cid=1&currentPage=" + [[${pageInfo.pageInfo.pageNum-1}]] + "'>上一页</a></li>";
+        }
+
+        //前5后4
+        let start;
+        let end;
+        //当总页码小于10
+        if(pages<=10){
+            start=1;
+            end=pages;
+        }else{
+            start=pageNum-5;
+            end=pageNum+4;
+            if(start<=0){
+                start=1;
+                end=start+9;
+            }
+            if(end>pages){
+                end=pages;
+                start=end-9;
+            }
+        }
+        //遍历分页
+        for (let i = start; i <= end; i++) {
+            //判断是否是当前页
+            if ([[${pageInfo.pageInfo.pageNum}]] == i) {
+                pageList += "<li class='active'><a href='javascript:void(0)'>" + i + "</a></li>";
+            } else {
+                pageList += "<li><a href='/paint/selectAll?cid=1&currentPage=" + i + "'>" + i + "</a></li>";
+            }
+        }
+        //判断是否是最后一页
+        if ([[${pageInfo.pageInfo.hasNextPage}]]) {
+            pageList += "<li class='button'><a href='/paint/selectAll?cid=1&currentPage=" + [[${pageInfo.pageInfo.pageNum+1}]] + "'>下一页</a></li>";
+        } else {
+            pageList += "<li class='button'><a class='disabled' href='javascript:void(0)'>下一页</a></li>"
+        }
+
+        pageList += "</ul>";
+
+        $("#page").html(pageList);
+
+    /*]]>*/
+</script>
+</body>
+</html>
+

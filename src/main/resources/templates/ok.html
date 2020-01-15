@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="utf-8" />
+    <title>ok</title>
+    <link rel="stylesheet" type="text/css" href="/css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/proList.css" />
+</head>
+<body>
+<!----------------------------------------order------------------>
+<div th:replace="header :: html"></div>
+<div class="order mt cart">
+    <div class="site">
+        <p class="wrapper clearfix">
+            <span class="fl">支付成功</span>
+            <img class="top" src="/img/temp/cartTop03.png">
+        </p>
+    </div>
+    <p class="ok">支付成功！剩余<span>5</span>秒<a href="/myorderq">返回订单页</a></p>
+</div>
+<div class="like">
+    <h4>猜你喜欢</h4>
+    <div class="bottom">
+        <div class="hd">
+            <span class="prev"><img src="/img/temp/prev.png"></span>
+            <span class="next"><img src="/img/temp/next.png"></span>
+        </div>
+        <div class="imgCon wrapper bd">
+            <div class="likeList clearfix">
+                <div>
+                    <a th:each="item,itemSta : ${items1}" th:if="${itemSta.index}<=5" th:href="@{'/details/'+${item.id}}">
+                        <dl>
+                            <dt><img th:src="${item.itemImage}"></dt>
+                            <dd th:text="${item.itemTitle}"></dd>
+                            <dd th:text="'￥'+${item.itemPrice}"></dd>
+                        </dl>
+                    </a>
+                </div>
+                <div>
+                    <a th:each="item,itemSta : ${items2}" th:if="${itemSta.index}<=5" th:href="@{'/details/'+${item.id}}">
+                        <dl>
+                            <dt><img th:src="${item.itemImage}"></dt>
+                            <dd th:text="${item.itemTitle}"></dd>
+                            <dd th:text="'￥'+${item.itemPrice}"></dd>
+                        </dl>
+                    </a>
+                    <a th:href="@{'/details/'+${items1[0].id}}" class="last">
+                        <dl>
+                            <dt><img th:src="${items1[0].itemImage}"></dt>
+                            <dd th:text="${items1[0].itemTitle}"></dd>
+                            <dd th:text="'￥'+${items1[0].itemPrice}"></dd>
+                        </dl>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--footer-->
+<div th:replace="footer :: html"></div>
+<script src="/js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/pro.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/jquery.SuperSlide.2.1.1.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    jQuery(".bottom").slide({titCell:".hd ul",mainCell:".bd .likeList",autoPage:true,autoPlay:false,effect:"leftLoop",autoPlay:true,vis:1});
+</script>
+</body>
+</html>
+

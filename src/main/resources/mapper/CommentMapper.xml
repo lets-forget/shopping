@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ning.home_admin.mapper.CommentMapper">
+  <resultMap id="BaseResultMap" type="com.ning.home_admin.bean.Comment">
+    <id column="comment_id" jdbcType="INTEGER" property="commentId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="details_id" jdbcType="INTEGER" property="detailsId" />
+    <result column="comment_connect" jdbcType="VARCHAR" property="commentConnect" />
+    <result column="comment_time" jdbcType="TIMESTAMP" property="commentTime" />
+    <result column="comment_image" jdbcType="VARCHAR" property="commentImage" />
+  </resultMap>
+
+  <!--一对多和一对一-->
+<!--  <resultMap id="comments" type="com.ning.home_admin.bean.Comment">
+    <id column="comment_id" jdbcType="INTEGER" property="commentId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="details_id" jdbcType="INTEGER" property="detailsId" />
+    <result column="comment_connect" jdbcType="VARCHAR" property="commentConnect" />
+    <result column="comment_time" jdbcType="TIMESTAMP" property="commentTime" />
+    <result column="comment_image" jdbcType="VARCHAR" property="commentImage" />
+    <association property="user" column="user_id"
+                 select="com.ning.home_admin.sytem.mapper.UserMapper.selectByPrimaryKey"
+                 javaType="com.ning.home_admin.sytem.pojo.User"/>
+
+   <collection property="orders" column="{uid=userId,detailsId=detailsId}" fetchType="eager"
+      select="com.ning.home_admin.mapper.OrderMapper.selectByUidAndDetailsId" javaType="java.util.List">
+   </collection>
+  </resultMap>-->
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jd_comment
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ning.home_admin.bean.Comment" useGeneratedKeys="true" keyProperty="commentId" keyColumn="comment_id">
+    insert into jd_comment (user_id, details_id,
+      comment_connect, comment_time,comment_image
+      )
+    values (#{userId,jdbcType=INTEGER}, #{detailsId,jdbcType=INTEGER},
+      #{commentConnect,jdbcType=VARCHAR}, #{commentTime},#{commentImage})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ning.home_admin.bean.Comment">
+    update jd_comment
+    set user_id = #{userId,jdbcType=INTEGER},
+      details_id = #{detailsId,jdbcType=INTEGER},
+      comment_connect = #{commentConnect,jdbcType=VARCHAR},
+      comment_time = #{commentTime,jdbcType=TIMESTAMP},
+      comment_image = #{commentImage,jdbcType=VARCHAR}
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateImage">
+    update jd_comment
+    set comment_image = concat(comment_image,#{image},',')
+    where user_id = #{uid} and details_id = #{details_id} and comment_id= #{id}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select comment_id, user_id, details_id, comment_connect, comment_time, comment_image
+    from jd_comment
+    where comment_id = #{commentId,jdbcType=INTEGER}
+  </select>
+
+
+</mapper>

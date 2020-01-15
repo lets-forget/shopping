@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ning.home_admin.mapper.ItemMapper">
+  <resultMap id="BaseResultMap" type="com.ning.home_admin.bean.Item">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="item_cid" jdbcType="INTEGER" property="itemCid" />
+    <result column="item_title" jdbcType="VARCHAR" property="itemTitle" />
+    <result column="item_price" jdbcType="DOUBLE" property="itemPrice" />
+    <result column="item_image" jdbcType="VARCHAR" property="itemImage" />
+    <result column="item_sales" jdbcType="INTEGER" property="itemSales" />
+    <result column="item_creatime" jdbcType="DATE" property="itemCreatime" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jd_item
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ning.home_admin.bean.Item">
+    insert into jd_item (id, item_cid, item_title, 
+      item_price, item_image, item_sales, 
+      item_creatime)
+    values (#{id,jdbcType=INTEGER}, #{itemCid,jdbcType=INTEGER}, #{itemTitle,jdbcType=VARCHAR}, 
+      #{itemPrice,jdbcType=DOUBLE}, #{itemImage,jdbcType=VARCHAR}, #{itemSales,jdbcType=INTEGER}, 
+      #{itemCreatime,jdbcType=DATE})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.ning.home_admin.bean.Item">
+    update jd_item
+    set item_cid = #{itemCid,jdbcType=INTEGER},
+      item_title = #{itemTitle,jdbcType=VARCHAR},
+      item_price = #{itemPrice,jdbcType=DOUBLE},
+      item_image = #{itemImage,jdbcType=VARCHAR},
+      item_sales = #{itemSales,jdbcType=INTEGER},
+      item_creatime = #{itemCreatime,jdbcType=DATE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, item_cid, item_title, item_price, item_image, item_sales, item_creatime
+    from jd_item
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, item_cid, item_title, item_price, item_image, item_sales, item_creatime
+    from jd_item limit #{param1},#{param2}
+  </select>
+  <!--根据cid查询墙式壁挂-->
+  <select id="paintSelectAllByCid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select id, item_cid, item_title, item_price, item_image, item_sales, item_creatime
+    from jd_item where item_cid=#{cid} and item_stats=1
+  </select>
+  <!--根据cid查询b抱枕靠垫-->
+  <select id="bzproListSelectAllByCid" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select id, item_cid, item_title, item_price, item_image, item_sales, item_creatime
+    from jd_item
+       where item_cid=#{cid} and item_stats=1
+       <if test=" sort!=null">
+         <if test="sort==1">
+           ORDER by item_creatime desc
+         </if>
+
+         <if test="sort==2">
+           ORDER by item_sales desc
+         </if>
+
+         <if test="sort==3">
+           ORDER by item_sales asc
+         </if>
+
+         <if test="sort==4">
+           ORDER by item_price desc
+         </if>
+
+         <if test="sort==5">
+           ORDER by item_price asc
+         </if>
+       </if>
+  </select>
+  <!--根据cid查询干花干艺-->
+  <select id="proListSelectAllById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select id, item_cid, item_title, item_price, item_image, item_sales, item_creatime
+    from jd_item
+       where item_cid=#{cid} and item_stats=1
+       <if test=" sort!=null">
+         <if test="sort==1">
+           ORDER by item_creatime desc
+         </if>
+
+         <if test="sort==2">
+           ORDER by item_sales desc
+         </if>
+
+         <if test="sort==3">
+           ORDER by item_sales asc
+         </if>
+
+         <if test="sort==4">
+           ORDER by item_price desc
+         </if>
+
+         <if test="sort==5">
+           ORDER by item_price asc
+         </if>
+       </if>
+  </select>
+  <!--根据cid查询手机自营-->
+  <select id="zbproListSelectAllById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select id, item_cid, item_title, item_price, item_image, item_sales, item_creatime
+    from jd_item
+       where item_cid=#{cid} and item_stats=1
+       <if test=" sort!=null">
+         <if test="sort==1">
+           ORDER by item_creatime desc
+         </if>
+
+         <if test="sort==2">
+           ORDER by item_sales desc
+         </if>
+
+         <if test="sort==3">
+           ORDER by item_sales asc
+         </if>
+
+         <if test="sort==4">
+           ORDER by item_price desc
+         </if>
+
+         <if test="sort==5">
+           ORDER by item_price asc
+         </if>
+       </if>
+  </select>
+  <!--根据cid查询电脑自营-->
+  <select id="perfumeSelectAllById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select id, item_cid, item_title, item_price, item_image, item_sales, item_creatime
+    from jd_item
+       where item_cid=#{cid} and item_stats=1
+       <if test=" sort!=null">
+         <if test="sort==1">
+           ORDER by item_creatime desc
+         </if>
+
+         <if test="sort==2">
+           ORDER by item_sales desc
+         </if>
+
+         <if test="sort==3">
+           ORDER by item_sales asc
+         </if>
+
+         <if test="sort==4">
+           ORDER by item_price desc
+         </if>
+
+         <if test="sort==5">
+           ORDER by item_price asc
+         </if>
+       </if>
+  </select>
+  <!--根据cid查询编程书籍-->
+  <select id="ideaSelectAllById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select id, item_cid, item_title, item_price, item_image, item_sales, item_creatime
+    from jd_item
+       where item_cid=#{cid} and item_stats=1
+       <if test=" sort!=null">
+         <if test="sort==1">
+           ORDER by item_creatime desc
+         </if>
+
+         <if test="sort==2">
+           ORDER by item_sales desc
+         </if>
+
+         <if test="sort==3">
+           ORDER by item_sales asc
+         </if>
+
+         <if test="sort==4">
+           ORDER by item_price desc
+         </if>
+
+         <if test="sort==5">
+           ORDER by item_price asc
+         </if>
+       </if>
+  </select>
+  <!--根据cid查询家用电器-->
+  <select id="flowerDerSelectAllById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select id, item_cid, item_title, item_price, item_image, item_sales, item_creatime
+    from jd_item
+       where item_cid=#{cid} and item_stats=1
+       <if test=" sort!=null">
+         <if test="sort==1">
+           ORDER by item_creatime desc
+         </if>
+
+         <if test="sort==2">
+           ORDER by item_sales desc
+         </if>
+
+         <if test="sort==3">
+           ORDER by item_sales asc
+         </if>
+
+         <if test="sort==4">
+           ORDER by item_price desc
+         </if>
+
+         <if test="sort==5">
+           ORDER by item_price asc
+         </if>
+       </if>
+  </select>
+  <!--根据cid查询男女服饰-->
+  <select id="vase_proListSelectAllById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select id, item_cid, item_title, item_price, item_image, item_sales, item_creatime
+    from jd_item
+       where item_cid=#{cid} and item_stats=1
+       <if test=" sort!=null">
+         <if test="sort==1">
+           ORDER by item_creatime desc
+         </if>
+
+         <if test="sort==2">
+           ORDER by item_sales desc
+         </if>
+
+         <if test="sort==3">
+           ORDER by item_sales asc
+         </if>
+
+         <if test="sort==4">
+           ORDER by item_price desc
+         </if>
+
+         <if test="sort==5">
+           ORDER by item_price asc
+         </if>
+       </if>
+  </select>
+  <!--根据cid查询电脑配件-->
+  <select id="decorationSelectAllById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select id, item_cid, item_title, item_price, item_image, item_sales, item_creatime
+    from jd_item
+       where item_cid=#{cid} and item_stats=1
+       <if test=" sort!=null">
+         <if test="sort==1">
+           ORDER by item_creatime desc
+         </if>
+
+         <if test="sort==2">
+           ORDER by item_sales desc
+         </if>
+
+         <if test="sort==3">
+           ORDER by item_sales asc
+         </if>
+
+         <if test="sort==4">
+           ORDER by item_price desc
+         </if>
+
+         <if test="sort==5">
+           ORDER by item_price asc
+         </if>
+       </if>
+  </select>
+
+  <!--搜索-->
+  <select id="searchSelectAll" resultMap="BaseResultMap" >
+    select id, item_cid, item_title, item_price, item_image, item_sales, item_creatime
+    from jd_item
+       where 1=1 and item_stats=1
+       <if test="name != null and name !='' ">
+         and item_title like concat('%',#{name},'%')
+       </if>
+       <if test=" sort!=null">
+         <if test="sort==1">
+           ORDER by item_creatime desc
+         </if>
+
+         <if test="sort==2">
+           ORDER by item_sales desc
+         </if>
+
+         <if test="sort==3">
+           ORDER by item_sales asc
+         </if>
+
+         <if test="sort==4">
+           ORDER by item_price desc
+         </if>
+
+         <if test="sort==5">
+           ORDER by item_price asc
+         </if>
+       </if>
+  </select>
+  <!--总记录数-->
+  <select id="selectconct" resultType="java.lang.Long">
+    select count(1) from jd_item
+  </select>
+</mapper>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="utf-8" />
+    <title>cart</title>
+    <link rel="stylesheet" type="text/css" href="/css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/proList.css" />
+    <link rel="stylesheet" type="text/css" href="/css/sweetalert.css">
+    <link rel="stylesheet" type="text/css" href="/layui/css/layui.css"/>
+
+</head>
+<body>
+<!--------------------------------------cart--------------------->
+<div th:replace="header :: html"></div>
+<div class="cart mt">
+    <!-----------------logo------------------->
+    <!--<div class="logo">
+        <h1 class="wrapper clearfix">
+            <a href="/index"><img class="fl" src="/img/temp/logo.png"></a>
+            <img class="top" src="/img/temp/cartTop01.png">
+        </h1>
+    </div>-->
+    <!-----------------site------------------->
+    <div class="site">
+        <p class=" wrapper clearfix">
+            <span class="fl">购物车</span>
+            <img class="top" src="/img/temp/cartTop01.png">
+            <a href="/index" class="fr">继续购物&gt;</a>
+        </p>
+    </div>
+    <!-----------------table------------------->
+    <div class="table wrapper">
+        <div class="tr">
+            <div>商品</div>
+            <div>单价</div>
+            <div>数量</div>
+            <div>小计</div>
+            <div>操作</div>
+        </div>
+
+        <div id="cartlist">
+
+        </div>
+
+
+        <div class="goOn">空空如也~<a href="/index">去逛逛</a></div>
+        <div class="tr clearfix">
+            <label class="fl">
+                <input class="checkAll" type="checkbox"/>
+                <span></span>
+            </label>
+            <p class="fl">
+                <a href="javascript:void(0)">全选</a>
+                <a href="javascript:void(0)" class="delAll">删除</a>
+            </p>
+            <p class="fr">
+                <span>共<small id="sl">0</small>件商品</span>
+                <span>合计:&nbsp;<small id="all">￥0.00</small></span>
+                <a href="javascript:void(0)" class="count">结算</a>
+            </p>
+        </div>
+    </div>
+</div>
+<div class="mask"></div>
+<!--返回顶部-->
+<div th:replace="gotop :: html"></div>
+<!--footer-->
+<div th:replace="footer :: html"></div>
+
+<script src="/js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/sweetalert.min.js"></script>
+<script src="/js/pro.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/getParams.js"></script>
+
+</body>
+</html>

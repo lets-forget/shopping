@@ -1,0 +1,82 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<script>
+    $(function () {
+        cartSelect();
+    })
+    function cartSelect(){
+        $.get("/cart/select",{},function (data) {
+            $("#cartcount").text(data.cartItems.length);
+            var cartlist='';
+            for (var i = 0; i <data.cartItems.length ; i++) {
+                cartlist +='<div class="th">\n' +
+                    '<div class="pro clearfix">\n' +
+                    '<label class="fl">\n' +
+                    '<input type="checkbox" name="cart" value='+data.cartItems[i].cartid+'>\n'+
+                    '<span></span>\n' +
+                    '</label>\n' +
+                    '<a class="fl" href="javascript:void(0)">\n' +
+                    '<dl class="clearfix">\n' +
+                    '<dt class="fl"><img src="'+data.cartItems[i].cartImage+'" style="widows: 120px;height: 120px;"></dt>\n' +
+                    '<dd class="fl">\n' +
+                    '<p style="width:220px;height 100px;" id="gotoptitle">'+data.cartItems[i].cartTitle+'</p>\n' +
+                    '<p style="width:220px;height 100px;" id="cartalt">商品分类：'+data.cartItems[i].cartClassify+'</p>\n' +
+                    '</dd>\n' +
+                    '</dl>\n' +
+                    '</a>\n' +
+                    '</div>\n' +
+                    '<div class="price" id="gotopprice">￥'+data.cartItems[i].cartPrice+'</div>\n' +
+                    '<div class="number">\n' +
+                    '<p class="num clearfix">\n' +
+                    '<img class="fl sub" src="/img/temp/sub.jpg" value="'+data.cartItems[i].cartClassify+'">\n' +
+                    '<span class="fl">'+data.cartItems[i].cartCount+'</span>\n' +
+                    '<img class="fl add" src="/img/temp/add.jpg" value="'+data.cartItems[i].cartClassify+'">\n' +
+                    '</p>\n' +
+                    '</div>\n' +
+                    '<div class="price sAll">￥'+(data.cartItems[i].cartCount*data.cartItems[i].cartPrice).toFixed(2)+'</div>\n' +
+                    '<div class="price"><a class="del" href="/cart/removeByOne?cartid='+data.cartItems[i].cartid+'">删除</a></div>\n' +
+                    '</div>';
+            }
+            if(data.cartItems.length==0){
+                $(".table .goOn").show();
+            }
+            $("#cartlist").html(cartlist);
+        });
+    }
+    $("body").on("click",".del",function () {
+        if (confirm("您确认要删除吗？")){
+            return true;
+        }
+        return false;
+    })
+</script>
+<div class="gotop">
+    <a href="/cart">
+        <dl class="goCart">
+            <dt><img src="/img/gt1.png"/></dt>
+            <dd>去购<br />物车</dd>
+            <span id="cartcount"></span>
+        </dl>
+    </a>
+    <a href="javascript:void(0)" class="dh">
+        <dl>
+            <dt><img src="/img/gt2.png"/></dt>
+            <dd>联系<br />客服</dd>
+        </dl>
+    </a>
+    <a href="/mygxin">
+        <dl>
+            <dt><img src="/img/gt3.png"/></dt>
+            <dd>个人<br />中心</dd>
+        </dl>
+    </a>
+    <a href="javascript:void(0)" class="toptop" style="display: none;">
+        <dl>
+            <dt><img src="/img/gt4.png"/></dt>
+            <dd>返回<br />顶部</dd>
+        </dl>
+    </a>
+    <p>15717990017</p>
+</div>
+
+</html>
+

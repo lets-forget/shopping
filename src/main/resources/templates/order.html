@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="utf-8" />
+    <title>order</title>
+    <link rel="stylesheet" type="text/css" href="/css/public.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/proList.css" />
+    <link rel="stylesheet" type="text/css" href="/css/mygxin.css" />
+    <link rel="stylesheet" type="text/css" href="/css/sweetalert.css">
+    <style>
+        select{
+            font-family: "微软雅黑";
+            width: 249px;
+            height: 40px;
+            font-size: 18px;
+            color: black;
+            text-align: center;
+            border: 1px #1a1a1a solid;
+            border-radius: 5px;
+        }
+
+        select:focus{
+            border: 2px #ddd solid;
+            box-shadow: 0 0 15px 1px black;
+        }
+    </style>
+</head>
+<body>
+<!----------------------------------------order------------------>
+<div th:replace="header :: html"></div>
+<div class="order cart mt">
+    <!-----------------site------------------->
+    <div class="site">
+        <p class="wrapper clearfix">
+            <span class="fl">订单确认</span>
+            <img class="top" src="/img/temp/cartTop02.png">
+        </p>
+    </div>
+    <!-----------------orderCon------------------->
+    <div class="orderCon wrapper clearfix">
+        <div class="orderL fl">
+            <!--------h3---------------->
+            <h3>收件信息<a href="javascript:void(0)" class="fr">新增地址</a></h3>
+            <!--------addres---------------->
+            <div class="addres clearfix" id="orderaddress" style="overflow: scroll; width: 720px;height: 400px;">
+                <div th:each="address : ${session.addressList}">
+                    <div th:switch="${address.defaultvalue}">
+                        <div class="addre fl on" th:case="1">
+                            <div class="tit clearfix">
+                                <p class="fl" th:text="${address.name}">
+                                </p>
+                                <span style="color: red">[默认地址]</span>
+                                <p class="fr">
+                                    <a href="javascript:void(0)" th:onclick="swal('默认地址不能删除')">删除</a>
+                                    <span>|</span>
+                                    <a href="javascript:void(0)" class="edit"  th:onclick="echoAddress([[${address.id}]])">编辑</a>
+                                </p>
+                            </div>
+                            <div class="addCon">
+                                <p th:text="${address.province}+' '+${address.city}+' '+${address.county}+' '+${address.particulars}"></p>
+                                <p th:text="${address.telephone}"></p>
+                            </div>
+                        </div>
+                        <div class="addre fl" th:case="0">
+                            <div class="tit clearfix">
+                                <p class="fl" th:text="${address.name}">
+                                </p>
+                                <p class="fr">
+                                    <a href="javascript:void(0)" class="setDefault" th:onclick="setdefault([[${address.id}]])">设为默认</a>
+                                    <span>|</span>
+                                    <a href="javascript:void(0)" th:onclick="deleteByOrderAddress([[${address.id}]])">删除</a>
+                                    <span>|</span>
+                                    <a href="javascript:void(0)" class="edit" th:onclick="echoAddress([[${address.id}]])">编辑</a>
+                                </p>
+                            </div>
+                            <div class="addCon">
+                                <p th:text="${address.province}+' '+${address.city}+' '+${address.county}+' '+${address.particulars}"></p>
+                                <p th:text="${address.telephone}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3>支付方式</h3>
+            <!--------way---------------->
+            <div class="way clearfix">
+                <img class="on" src="/img/temp/way01.jpg">
+                <img src="/img/temp/way02.jpg">
+                <img src="/img/temp/way03.jpg">
+            </div>
+            <!--<h3>选择快递</h3>
+            <div class="dis clearfix">
+                <span class="on">顺风快递</span>
+                <span>百世汇通</span>
+                <span>圆通快递</span>
+                <span>中通快递</span>
+            </div>-->
+        </div>
+        <div class="orderR fr">
+            <div class="msg">
+                <h3>订单内容<a href="/cart" class="fr">返回购物车</a></h3>
+                <!--------ul---------------->
+                <ul class="clearfix" th:if="${session.itemList==null}">
+                    <li class="fl">
+                        <img th:src="${session.detailsInfo.itemSmall.itemSmallImage}" style="width: 87px;height: 87px;">
+                    </li>
+                    <li class="fl">
+                        <p style="width:240px;height:auto;" th:text="${session.detailsInfo.details.itemDetailsTitle}"></p>
+                        <p th:text="'商品分类：'+${session.detailsInfo.itemSmall.itemSmallAlt}"></p>
+                        <p th:text="'数量：'+${session.detailsInfo.count}"></p>
+                    </li>
+                    <li class="fr" th:text="'￥'+${session.detailsInfo.details.itemDetailsPrice}"></li>
+                </ul>
+                <ul class="clearfix" th:if="${session.itemList!=null}" th:each="item : ${session.itemList}">
+                    <li class="fl">
+                        <img th:src="${item.cartImage}" style="width: 87px;height: 87px;">
+                    </li>
+                    <li class="fl">
+                        <p style="width:240px;height:auto;" th:text="${item.cartTitle}"></p>
+                        <p th:text="'商品分类：'+${item.cartClassify}"></p>
+                        <p th:text="'数量：'+${item.cartCount}"></p>
+                    </li>
+                    <li class="fr" th:text="'￥'+${item.cartSubtotal}"></li>
+                </ul>
+            </div>
+            <!--------tips---------------->
+            <div th:if="${session.itemList==null}">
+                <div class="tips">
+                    <p><span class="fl">商品金额：</span><span class="fr" id="Totalmoeny1" th:text="'￥'+${session.detailsInfo.subtotal}"></span></p>
+                    <p><span class="fl">优惠金额：</span><span class="fr">￥0.00</span></p>
+                    <p><span class="fl">运费：</span><span class="fr">免运费</span></p>
+                </div>
+                <!--------tips count---------------->
+                <div class="count tips">
+                    <p><span class="fl">合计：</span><span class="fr" id="Totalmoeny2" th:text="'￥'+${session.detailsInfo.subtotal}"></span></p>
+                </div>
+            </div>
+            <div>
+
+            <div th:if="${session.itemList!=null}">
+                <div class="tips">
+                    <p><span class="fl">商品金额：</span><span class="fr" th:text="'￥'+${session.Totalmoney}"></span></p>
+                    <p><span class="fl">优惠金额：</span><span class="fr">￥0.00</span></p>
+                    <p><span class="fl">运费：</span><span class="fr">免运费</span></p>
+                </div>
+                <!--------tips count---------------->
+                <div class="count tips">
+                    <p><span class="fl">合计：</span><span class="fr" th:text="'￥'+${session.Totalmoney}"></span></p>
+                </div>
+            </div>
+
+            <a th:href="@{'/payment/'+${session.detailsInfo.order.orderId}+'/'+${session.detailsInfo.order.orderDetailsId}+'/'+${session.type}}" class="pay">去支付</a>
+        </div>
+    </div>
+</div>
+<!--遮罩-->
+<div class="mask"></div>
+<div class="adddz">
+    <form action="" method="post" id="AddressForm">
+        <input type="text" placeholder="收货人姓名" name="name" id="addname"/>
+        <input type="text" placeholder="收货人手机号" name="telephone" id="addphone"/>
+        <div id="distpicker3">
+            <div class="form-group">
+                <select class="form-control" name="province" id="addprovince"></select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="city" id="addcity"></select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="county" id="addcounty"></select>
+            </div>
+        </div>
+        <textarea name="particulars" rows="2" cols="" placeholder="收货人详细地址" id="addparticulars"></textarea>
+        <div class="bc">
+            <input type="submit" value="保存" />
+            <input type="button" value="取消" />
+        </div>
+    </form>
+</div>
+<!--修改-->
+<!--遮罩-->
+<div class="mask"></div>
+<div class="readd">
+    <form action="/order/updateAddress" method="post" id="updateForm">
+        <input type="hidden" name="id" id="orderid">
+        <input type="text" placeholder="姓名" id="ordername" name="name"/>
+        <input type="text" placeholder="手机号" id="orderphone" name="telephone"/>
+        <div id="distpicker">
+            <div class="form-group">
+                <select class="form-control" name="province" id="orderprovince"></select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="city" id="ordercity"></select>
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="county" id="ordercounty"></select>
+            </div>
+        </div>
+        <textarea name="particulars" rows="" cols="" placeholder="详细地址" id="orderparticulars"></textarea>
+        <div class="bc">
+            <input type="submit" value="保存" />
+            <input type="button" value="取消" />
+        </div>
+    </form>
+</div>
+<!--返回顶部-->
+<div th:replace="gotop :: html"></div>
+<!--footer-->
+<div th:replace="footer :: html"></div>
+<script src="/js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/public.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/pro.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/user.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/sweetalert.min.js"></script>
+<script src="/js/address.js"></script>
+<script src="/js/cart.js"></script>
+<script src="/js/distpicker.data.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/distpicker.js"></script>
+<script src="/js/getParams.js"></script>
+<script>
+
+    //回显地址
+    function echoAddress(id){
+        $.ajax({
+            cache: false,
+            async: true,
+            type: 'post',
+            data: { "id": id },
+            url: "/address/echoAddress",
+            success: function (data) {
+                $("#orderid").val(data.id);
+                $("#ordername").val(data.name);
+                $("#orderphone").val(data.telephone);
+                $("#orderparticulars").val(data.particulars);
+            }
+        });
+
+        $(".mask").show();
+        $(".readd").show();
+    }
+    //提交修改
+    $("#updateForm").submit(function () {
+        if(checkName($("#ordername"))&&checkTelephone($("#orderphone"))&&checkProvince($("#orderprovince"))
+        &&checkCity($("#ordercity"))&&checkCounty($("#ordercounty"))&&checkParticulars($("#orderparticulars"))){
+
+            $.get("/order/updateAddress",$(this).serialize(),function (data) {
+                if (data){
+                    location.href="/order/refreshAddress";
+                }
+            })
+        }
+        return false;
+    })
+    //添加地址
+    $("#AddressForm").submit(function () {
+        if(checkName($("#addname"))&&checkTelephone($("#addphone"))&&checkProvince($("#addprovince"))
+            &&checkCity($("#addcity"))&&checkCounty($("#addcounty"))&&checkParticulars($("#addparticulars"))){
+
+            $.get("/order/addAddress",$(this).serialize(),function (data) {
+                if (data){
+                    location.href="/order/refreshAddress";
+                }
+            })
+        }
+        return false;
+    })
+    //设为默认地址
+    function setdefault(id) {
+        $.get("/order/setDefault",{"id":id},function (data) {
+            if (data){
+                location.href="/order/refreshAddress";
+            }
+        })
+    }
+
+    //删除地址
+     function deleteByOrderAddress(id){
+         swal({
+             title: "您确定要删除吗？",
+             text: "您确定要删除这条数据？",
+             type: "warning",
+             showCancelButton: true,
+             closeOnConfirm: false,
+             confirmButtonText: "是的，我要删除",
+             confirmButtonColor: "#ec6c62"
+         }, function() {
+             $.post("/order/deleteAddressById",{"id":id},function (data) {
+                 if(data){
+                     swal("操作成功!", "已成功删除数据！", "success");
+                     setTimeout(function () {
+                         location.href="/order/refreshAddress";
+                     }, 1000);
+                 }else{
+                     swal("操作失败", "删除操作失败了!", "error");
+                 }
+             },"json");
+         });
+     }
+</script>
+</body>
+</html>
+
+

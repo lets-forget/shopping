@@ -1,0 +1,184 @@
+<html xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:th="http://www.thymeleaf.org">
+<style>
+    .session_name{
+        font-size: 19px;
+        /*渐变背景*/
+        background-image: -webkit-linear-gradient(left, #3498db, #f47920 10%, #d71345 20%, #f7acbc 30%,
+        #ffd400 40%, #3498db 50%, #f47920 60%, #d71345 70%, #f7acbc 80%, #ffd400 90%, #3498db);
+        color: transparent; /*文字填充色为透明*/
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;          /*背景剪裁为文字，只将文字显示为背景*/
+        background-size: 200% 100%;            /*背景图片向水平方向扩大一倍，这样background-position才有移动与变化的空间*/
+        /* 动画 */
+        animation: masked-animation 1s infinite linear;
+    }
+    @keyframes masked-animation {
+        0% {
+            background-position: 0 0;   /*background-position 属性设置背景图像的起始位置。*/
+        }
+        100% {
+            background-position: -100% 0;
+        }
+    }
+</style>
+<script src="/layui/layui.js"></script>
+<script src="/layui/layui.all.js" charset="utf-8"></script>
+<script src="/js/jquery-1.12.4.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="/js/location.js"></script>
+
+<div class="head">
+    <div class="wrapper clearfix">
+        <div class="clearfix" id="top">
+            <h1 class="fl"><span class="session_name" id="hoppy"></span></h1>
+            <div class="fr clearfix" id="top1">
+                <shiro:guest>
+                    <p class="fl">
+                        <a href="/login" id="login">登录</a>
+                        <a href="/register" id="reg">注册</a>
+                    </p>
+                </shiro:guest>
+                <shiro:user>
+                    <p class="fl">
+                        当前用户：<a href="/mygxin"><span style="color: red;" class="session_name" th:text="${session.user.username}"></span></a>
+                    </p>
+                    <!--<script th:inline="javascript">-->
+                        <!--/*<![CDATA[*/-->
+                        <!--layui.config({-->
+                            <!--base: '/layui/dist/'-->
+                        <!--}).extend({-->
+                            <!--notice: 'notice/notice',-->
+                        <!--});-->
+                        <!--layui.use(['notice'], function () {-->
+                            <!--var websocket = null;-->
+                            <!--var notice = layui.notice; // 允许别名 toastr-->
+
+                            <!--//判断当前浏览器是否支持WebSocket-->
+                            <!--if('WebSocket' in window){-->
+                                    <!--websocket = new WebSocket("ws://localhost:8090/test/"+[[${session.user.username}]]);-->
+                            <!--}else{-->
+                                <!--notice.warning({animateInside: "true",-->
+                                    <!--audio: "1",-->
+                                    <!--balloon: "true",-->
+                                    <!--displayMode: "0",-->
+                                    <!--layout: "2",-->
+                                    <!--message: "当前浏览器不支持websocket，建议您更换浏览器（可以会影响部分功能的使用）",-->
+                                    <!--noticeType: "warning",-->
+                                    <!--position: "topRight",-->
+                                    <!--progressBar: "true",-->
+                                    <!--rtl: false,-->
+                                    <!--theme: "light",-->
+                                    <!--timeout: false,-->
+                                    <!--title: "消息通知",-->
+                                    <!--transitionIn: "fadeInLeft",-->
+                                    <!--transitionOut: "fadeOutRight"});-->
+                            <!--}-->
+
+                            <!--//连接发生错误的回调方法-->
+                 <!--/*           websocket.onerror = function(){-->
+                                <!--setMessageInnerHTML("error");-->
+                            <!--};*/-->
+
+                            <!--//连接成功建立的回调方法-->
+                 <!--/*           websocket.onopen = function(event){-->
+                                <!--setMessageInnerHTML("open");-->
+                            <!--}-->
+<!--*/-->
+                            <!--//接收到消息的回调方法-->
+                            <!--websocket.onmessage = function(event){-->
+                                <!--setMessageInnerHTML(event.data);-->
+                            <!--}-->
+
+                           <!--//连接关闭的回调方法-->
+                <!--/*            websocket.onclose = function(){-->
+                                <!--setMessageInnerHTML("close");-->
+                            <!--}*/-->
+
+                            <!--//监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。-->
+                 <!--/*           window.onbeforeunload = function(){-->
+                                    <!--closeWebSocket();-->
+                            <!--}*/-->
+
+
+                            <!--//将消息显示在网页上-->
+                            <!--function setMessageInnerHTML(innerHTML){-->
+                                <!--notice.info({animateInside: "true",-->
+                                    <!--audio: "1",-->
+                                    <!--balloon: "true",-->
+                                    <!--displayMode: "0",-->
+                                    <!--layout: "2",-->
+                                    <!--message: innerHTML,-->
+                                    <!--noticeType: "success",-->
+                                    <!--position: "topRight",-->
+                                    <!--progressBar: "true",-->
+                                    <!--rtl: false,-->
+                                    <!--theme: "light",-->
+                                    <!--timeout: false,-->
+                                    <!--title: "消息通知",-->
+                                    <!--transitionIn: "fadeInLeft",-->
+                                    <!--transitionOut: "fadeOutRight"});-->
+                            <!--}-->
+
+                            <!--//关闭连接-->
+                     <!--/*       function closeWebSocket(){-->
+                                <!--websocket.close();-->
+                            <!--}*/-->
+
+                            <!--//发送消息-->
+                   <!--/*         function send(){-->
+                                <!--var message = document.getElementById('text').value;-->
+                                <!--websocket.send(message);-->
+                            <!--}*/-->
+                        <!--});-->
+                        <!--/*]]>*/-->
+                    <!--</script>-->
+                </shiro:user>
+                <form action="/search/selectAll" method="post" class="fl" id="SearchForm">
+                    <input type="text" placeholder="热门搜索：显卡" name="searchname" th:value="${param.searchname}"  />
+                    <input type="button" onclick="$('#SearchForm').submit()" />
+                </form>
+                <div class="btn fl clearfix">
+                    <a href="/mygxin"><img src="/img/grzx.png"/></a>
+                    <a href="javascript:void(0);" class="er1"><img src="/img/ewm.png"/></a>
+                    <a href="/cart"><img src="/img/gwc.png"/></a>
+                    <p><a href="javascript:void(0);"><img src="/img/TIM图片20191102133642.jpg"/></a></p>
+                </div>
+            </div>
+        </div>
+        <ul class="clearfix" id="bott">
+
+        </ul>
+    </div>
+</div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    $(document).ready(function() {
+        let sh=setInterval(setTimeOut,1000) ;
+        function setTimeOut() {
+            var endtime=new Date("2020/1/24,00:00:00");//结束时间
+            var nowtime = new Date();//当前时间
+            var lefttime=  parseInt((endtime.getTime()-nowtime.getTime())/1000)  ;
+            d=  parseInt(lefttime/(24*60*60))  ;
+            h=  parseInt(lefttime/(60*60)%24)  ;
+            m=  parseInt(lefttime/60%60)  ;
+            s=  parseInt(lefttime%60)  ;
+
+            document.getElementById("hoppy").innerHTML="距离除夕还剩："+d+"天"+h+"小时"+m+"分"+s+"秒";
+            if(lefttime<=0){
+                document.getElementById("hoppy").innerHTML="新 年 快 乐";
+                clearInterval(sh);
+            }
+        }
+    });
+        $.post("/category/selectAll",{},function (data) {
+        var categoryList='<li><a href="/index">首页</a></li>';
+        for (var i = 0; i < data.length; i++) {
+            categoryList+='<li><a href="'+data[i].cHref+'?cid='+data[i].cId+'">'+data[i].cName+'</a></li>';
+        }
+        $("#bott").html(categoryList);
+    })
+    /*]]>*/
+</script>
+</html>
+
+
